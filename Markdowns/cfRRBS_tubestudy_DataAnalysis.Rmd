@@ -1,0 +1,1383 @@
+---
+title: "Genome-wide study of the effect of preservation tubes on the cell-free DNA methylome: supplementary data"
+author: "Ruben Van Paemel"
+date: "23/04/2020"
+output:
+  html_document:
+    code_folding: hide
+    highlight: kate
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_float: yes
+    df_print: paged
+---
+
+# Introduction
+## Experimental setup
+For the evaluation of the different blood collection tubes, blood was drawn from 3 healthy volunteers. The order of all blood tubes was randomized per donor. All blood tubes were filled to the volume recommended by the manufacturer.
+
+*Preservation tubes.* We included 4 different preservation tubes (Streck cell-free RNA BCT, PAXgene Blood ccfDNA Tube, Roche cell-free DNA Collection tube and Biomatrica LBgard blood tube) with processing at 3 different timepoints after blood collection (t0, t24 and t72). Thus, 15 blood tubes were drawn per healthy volunteer. 
+
+*Non-preservation plasma tubes.* We included 1 non-preservation plasma tubes (BD Vacutainer K2E EDTA spray) with processing at 3 different timepoints after blood collection (t0, t24 and t72). 
+
+Thus, 15 blood tubes were drawn per healthy volunteer. Seven tubes were collected from one antecubital vein and 8 tubes were collected from the contralateral antecubital vein with the BD Vacutainer push button 21G, 7” tube with pre-attached holder tube butterfly needle system.
+  
+## Metric selection
+Several metrics were selected to assess tube effect and stability.
+
+1. Relative endogenous DNA content (see [Relative DNA content])
+2. Genome-wide CpG methylation percentage (see [Genome-wide CpG methylation])
+3. Absolute number of CpGs detected (unfiltered and filtered, see [Number of CpGs])
+4. Immune content (NNLS and CelFiE, see [Meth atlas] and [CelFiE/ENCODE as reference set])
+
+Furthermore, in order to select the tubes which remains most stable across time points, we calculated for every tube and donor the fold change across different timepoints (excluding T24-T72). Thus, six fold-change values were obtained per tube. These were visualized and tubes were ordered based on the mean of these six values. 
+
+## RMarkdown set-up
+First, basic parameters are set up in this RMarkdown, such as loading dependencies, setting paths and setting up a uniform plot structure. 
+
+Pdf versions of most plots are in this github repository under `./plots/`
+
+```{r setup, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache = TRUE)
+library(gridExtra)
+require(tidyverse)
+require(reshape2)
+require(broom)
+require(DT)
+require(RColorBrewer)
+require(ggpubr)
+require(ggbeeswarm)
+require(scales)
+require(ggrepel)
+require(zoo)
+require(ggExtra)
+require(ggplot2)
+require(RCurl)
+require(readxl)
+require(plotly)
+require(nnls)
+require(httr)
+require(psych)
+require(ggbeeswarm)
+require(irr)
+require(asht)
+require(DT)
+require(readr)
+source("HelperFunctions.R")
+
+reScale <- function(x){(x-min(x))/(max(x)-min(x))}
+
+remove_geom <- function(ggplot2_object, geom_type) {
+  # Delete layers that match the requested type.
+  layers <- lapply(ggplot2_object$layers, function(x) {
+    if (class(x$geom)[1] == geom_type) {
+      NULL
+    } else {
+      x
+    }
+  })
+  # Delete the unwanted layers.
+  layers <- layers[!sapply(layers, is.null)]
+  ggplot2_object$layers <- layers
+  ggplot2_object
+}
+
+# plot style
+theme_point<-theme_bw()+theme(strip.background = element_blank())
+theme_bar<-theme_bw()+theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1),strip.background = element_blank(),axis.ticks.x = element_blank(),axis.line.x = element_blank())
+theme_boxplot<-theme_bw()+theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1),strip.background = element_blank(),axis.ticks.x = element_blank(),axis.title.x = element_blank(),axis.line.x = element_blank(),legend.position = "none")
+
+color_panel<-c("#e35d6a","#5bb75b","#428bca","#e87810","#23496b","#ffbf00","#cc2028","#039748","pink","gray","darkgray")
+
+color_panel1 <-  c("#039748","#039748","#ffbf00","#ffbf00","#e35d6a","#e35d6a","#5bb75b","#5bb75b","#428bca","#428bca","#23496b","#23496b","#cc2028","#cc2028","#e87810")
+
+color_panel2 <-  brewer.pal(6, name = "Paired")
+names(color_panel2) <- c("Biomatrica", "EDTA","RNA Streck","Roche","DNA Streck", "Paxgene")
+
+full_nr <- format_format(big.mark = ",", decimal.mark = ".", scientific = FALSE)
+options(scipen=10000)
+
+
+# Global variables
+data_path <- "../data/"
+readcutoff <- 15
+
+#bismark_meth <- read_tsv("../data/donor2/multiqc_bismark_methextract.txt")
+#bismark_meth$`Sample` <- gsub("_.*", "", bismark_meth$`Sample`)
+
+bismark_aligned <- read_tsv("../data/20200120_multiqc_data/multiqc_bismark_alignment.txt")
+bismark_aligned$`Sample` <- gsub("_.*", "", bismark_aligned$`Sample`)
+bismark_aligned <- bismark_aligned[!grepl("lambda", bismark_aligned$`Sample`),]
+#bismark_aligned$`Category` <- gsub("_.*", "", bismark_aligned$`Category`)
+
+bismark_aligned_lambda <- read_tsv("../data/20200120_multiqc_data/multiqc_bismark_alignment.txt")
+bismark_aligned_lambda$`Sample` <- gsub("_.*", "", bismark_aligned_lambda$`Sample`)
+bismark_aligned_lambda <- bismark_aligned_lambda[grepl("lambda", bismark_aligned_lambda$`Sample`),]
+bismark_aligned_lambda$`Sample` <- gsub("lambda.", "", bismark_aligned_lambda$`Sample`)
+#bismark_aligned$`Category` <- gsub("_.*", "", bismark_aligned$`Category`)
+colnames(bismark_aligned_lambda) <- paste(colnames(bismark_aligned_lambda), sep = ".", "lambda")
+
+bismark_aligned <- merge(bismark_aligned, bismark_aligned_lambda, by.x = "Sample", by.y = "Sample.lambda")
+
+picard_hsmetrics <- read_tsv("../data/20200120_multiqc_data/multiqc_picard_HsMetrics.txt")#[-1,]
+picard_hsmetrics$`Sample` <- gsub("_.*", "", picard_hsmetrics$`Sample`)
+picard_hsmetrics$`Prct on bait` <- as.numeric(picard_hsmetrics$`ON_BAIT_BASES`)/as.numeric(picard_hsmetrics$`PF_UQ_BASES_ALIGNED`)
+
+picard_dups <- read_tsv("../data/20200120_multiqc_data//multiqc_picard_dups.txt")#[-1,]
+picard_dups$`Sample` <- gsub("_.*", "", picard_dups$`Sample`)
+picard_dups <- picard_dups %>% filter(!grepl("^lambda", picard_dups$`Sample`))
+
+sample_annotation<-read_excel("./cfRRBS_tubestudy_annotation.xlsx")
+sample_annotation <- merge(sample_annotation, bismark_aligned, by.x = "UniqueID", by.y = "Sample")
+sample_annotation <- merge(sample_annotation, picard_hsmetrics, by.x = "UniqueID", by.y = "Sample")
+sample_annotation <- merge(sample_annotation, picard_dups, by.x = "UniqueID", by.y = "Sample")
+sample_annotation <- as_tibble(sample_annotation)
+sample_annotation$pipeline <- "Bismark"
+sample_annotation$Evolution <- paste0(sample_annotation$Tube, "_", sample_annotation$BiologicalReplicate, "_", sample_annotation$pipeline)
+sample_annotation$MappedVsLambda <- (sample_annotation$aligned_reads + sample_annotation$ambig_reads )/(sample_annotation$aligned_reads.lambda) 
+sample_annotation$MappingPrct = as.numeric(sample_annotation$`aligned_reads`)/(as.numeric(sample_annotation$`aligned_reads`)+ as.numeric(sample_annotation$`ambig_reads`)+as.numeric(sample_annotation$`discarded_reads`))*100
+
+sample_annotation$Prct_on_bait = as.numeric(sample_annotation$`ON_BAIT_BASES`)/as.numeric(sample_annotation$`PF_BASES_ALIGNED`)*100
+
+#describe(sample_annotation %>% mutate(Femto_pg =FEMTO_conc_nguL*1000) %>% select(Femto_pg, Tube), quant = c(.25,.75), na.rm = TRUE)
+#sample_annotation$MappedVsLambda <- (sample_annotation$percent_aligned  )/(sample_annotation$percent_aligned.lambda) 
+```
+
+# Femto PULSE
+For all samples, we performed quality control with capillary electrophoresis, indicating the presence of a high content of HMW DNA in EDTA at T72. 
+
+```{r, fig.height=16, fig.width=10}
+ladder <- read_tsv("../data/femto_data/ladder.txt")
+colnames(ladder) <- c("time_sec", "ladder" )
+ladder$time_sec <- as.character(ladder$time_sec )
+df_melt <- ladder %>% melt()
+df_melt<- as_tibble(df_melt)
+df_melt$time_sec <- as.numeric(df_melt$time_sec)
+p <- ggplot(df_melt, aes(x = time_sec/60, color = variable, y = value)) +
+  geom_line() + theme_point + 
+  labs(title = "ladder", y = "RFU", x = "time (min)", color = "condition")
+
+time_ladder <- c("946.63100", "1096.73000", "1230.82000", "1362.91000", "1491.99000", "1612.07000", "1712.14000", "1797.20000", "1878.25000", "1945.30000", "2001.33000", "2081.39000", "2158.44000", "2208.47000", "2264.51000", "2361.57000")
+size_ladder <- c(1,100,200,300,400,500,600,700,800,900,1000,1200,1500,2000,3000,6000)
+
+time_ladder <- c("946.63100", "1096.73000", "1230.82000", "1362.91000", "1491.99000", "1612.07000", "1797.20000", "2001.33000", "2158.44000", "2264.51000", "2361.57000")
+size_ladder <- c(1,100,200,300,400,500,700,1000,1500,3000,6000)
+
+ladder_df <- data.frame(time_sec = time_ladder, size_ladder = size_ladder)
+ladder_df <- as_tibble(ladder_df)
+ladder_df$time_sec <- as.character(ladder_df$time_sec)
+ladder_df_melt <- ladder_df %>% melt()
+
+makePlot <- function(input, tubetype, donor, ylim = c(-100,4000), offset_sec = 0){
+  input <- input %>% select(-c(`Time (HH:MM:SS) - Plot 1`, `Time (HH:MM:SS) - Plot 2`))
+  colnames(input) <- c("time_sec", paste0(donor, " - T0"), paste0(donor, " - T24"), paste0(donor, " - T72") )
+  input$time_sec <- as.character(input$time_sec )
+  df_melt <- input %>% melt()
+  df_melt<- as_tibble(df_melt)
+  df_melt$time_sec <- as.numeric(df_melt$time_sec)
+  p <- ggplot(df_melt %>% filter(time_sec > 800), aes(x = time_sec/60 - offset_sec/60, color = variable, y = value)) +
+            geom_line() + theme_point + 
+            lims(y = ylim)+
+            theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+            scale_x_continuous(breaks = as.numeric(time_ladder)/60, labels = size_ladder)+
+            labs(title = paste0(tubetype, " - ", donor), y = "RFU", x = "length (bp)", color = "condition")
+  p
+}
+```
+
+## Donor 1
+```{r, fig.height=16, fig.width=10}
+Biomatrica_D1 <-  read_tsv("../data/femto_data/biomatrica_d1.txt")
+Streck_D1 <-  read_tsv("../data/femto_data/streck_d1.txt")
+EDTA_D1 <-  read_tsv("../data/femto_data/edta_d1.txt")
+Paxgene_D1 <-  read_tsv("../data/femto_data/paxgene_d1.txt")
+Roche_D1 <-  read_tsv("../data/femto_data/roche_d1.txt")
+
+tmp <- makePlot(Biomatrica_D1, "Biomatrica", "donor 1", offset_sec = 260)
+p_bm <- ggplot2::last_plot()
+
+tmp <- makePlot(Streck_D1, "Streck", "donor 1", offset_sec = 260)
+p_streck <- ggplot2::last_plot()
+
+tmp <- makePlot(EDTA_D1, "EDTA", "donor 1", ylim = c(-100, 8000), offset_sec = 260)
+p_edta <- ggplot2::last_plot()
+
+tmp <- makePlot(Paxgene_D1, "Paxgene", "donor 1", ylim = c(-100, 8000), offset_sec = 260)
+p_pax <- ggplot2::last_plot()
+
+tmp <- makePlot(Roche_D1, "Roche", "donor 1", offset_sec = 260)
+p_roche <- ggplot2::last_plot()
+
+figure <- ggarrange(
+  p_bm, p_streck, p_edta, p_pax, p_roche, labels = c("A", "B", "C", "D", "E", "F"),
+  common.legend = TRUE, legend = "bottom", ncol = 2, nrow = 3
+)
+
+figure
+
+ggsave(figure, filename = "./plots/FEMTO_overlay_D1.png", dpi = 300, height=10, width=7)
+```
+
+## Donor 2
+```{r, fig.height=16, fig.width=10}
+Biomatrica_D2 <-  read_tsv("../data/femto_data/biomatrica_d2.txt")
+Streck_D2 <-  read_tsv("../data/femto_data/streck_d2.txt")
+EDTA_D2 <-  read_tsv("../data/femto_data/edta_d2.txt")
+Paxgene_D2 <-  read_tsv("../data/femto_data/paxgene_d2.txt")
+Roche_D2 <-  read_tsv("../data/femto_data/roche_d2.txt")
+
+tmp <- makePlot(Biomatrica_D2, "Biomatrica", "donor 2")
+p_bm <- ggplot2::last_plot()
+
+tmp <- makePlot(Streck_D2, "Streck", "donor 2")
+p_streck <- ggplot2::last_plot()
+
+tmp <- makePlot(EDTA_D2, "EDTA", "donor 2", ylim = c(-100, 8000))
+p_edta <- ggplot2::last_plot()
+
+tmp <- makePlot(Paxgene_D2, "PAXgene", "donor 2")
+p_pax <- ggplot2::last_plot()
+
+tmp <- makePlot(Roche_D2, "Roche", "donor 2")
+p_roche <- ggplot2::last_plot()
+
+figure <- ggarrange(
+  p_bm, p_streck, p_edta, p_pax, p_roche, labels = c("A", "B", "C", "D", "E", "F"),
+  common.legend = TRUE, legend = "bottom", ncol = 2, nrow = 3
+)
+
+figure
+
+ggsave(figure, filename = "./plots/FEMTO_overlay_D2.png", dpi = 300, height=10, width=7)
+```
+
+## Donor 3
+```{r, fig.height=16, fig.width=10}
+Biomatrica_D3 <-  read_tsv("../data/femto_data/biomatrica_d3.txt")
+Streck_D3 <-  read_tsv("../data/femto_data/streck_d3.txt")
+EDTA_D3 <-  read_tsv("../data/femto_data/edta_d3.txt")
+Paxgene_D3 <-  read_tsv("../data/femto_data/paxgene_d3.txt")
+Roche_D3 <-  read_tsv("../data/femto_data/roche_d3.txt")
+
+tmp <- makePlot(Biomatrica_D3, "Biomatrica", "donor 3")
+p_bm <- ggplot2::last_plot()
+
+tmp <- makePlot(Streck_D3, "Streck", "donor 3")
+p_streck <- ggplot2::last_plot()
+
+tmp <- makePlot(EDTA_D3, "EDTA", "donor 3", ylim = c(-100, 8000))
+p_edta <- ggplot2::last_plot()
+
+tmp <- makePlot(Paxgene_D3, "Paxgene", "donor 3", ylim = c(-100, 4000))
+p_pax <- ggplot2::last_plot()
+
+tmp <- makePlot(Roche_D3, "Roche", "donor 3")
+p_roche <- ggplot2::last_plot()
+
+figure <- ggarrange(
+  p_bm, p_streck, p_edta, p_pax, p_roche, labels = c("A", "B", "C", "D", "E", "F"),
+  common.legend = TRUE, legend = "bottom", ncol = 2, nrow = 3
+)
+
+figure
+
+ggsave(figure, filename = "./plots/FEMTO_overlay_D3.png", dpi = 300, height=10, width=7)
+```
+
+# Sample annotation
+An overview of the samples included in this experiment.
+
+```{r}
+datatable(sample_annotation, caption = "Sample annotation table")
+```
+
+
+```{r foldchangefunction}
+# fold change function + make plots
+generateFC <- function(input_df, variable, dfName, AC){
+fold_change_input_all <- data.frame() 
+for (duplicate_type in unique(sample_annotation$Tube)){
+  sample_duplicates<-sample_annotation%>% filter(Tube==duplicate_type)
+  if(nrow(sample_duplicates)>1){
+    #print(duplicate_type)
+    #double_positives_sample <-double_positives %>% dplyr::select(MIMATID,sample_duplicates$UniqueID) 
+    input_df_sample <- left_join(sample_duplicates, input_df)
+    # only keep the replicates of one type
+   
+    samples_comb <- combn(sample_duplicates$UniqueID,2) #compare 2 of the 3 samples at a time
+    for (n_col in 1:ncol(samples_comb)) {
+      #print(samples_comb[,n_col])
+      nr_runA <- gsub("^[A-Z]+","",sample_annotation[sample_annotation$UniqueID== samples_comb[1,n_col],]$TimeLapse)
+      nr_runB <- gsub("^[A-Z]+","",sample_annotation[sample_annotation$UniqueID== samples_comb[2,n_col],]$TimeLapse)
+      RepA <- sample_annotation[sample_annotation$UniqueID== samples_comb[1,n_col],]$BiologicalReplicate
+      RepB <- sample_annotation[sample_annotation$UniqueID== samples_comb[2,n_col],]$BiologicalReplicate
+     if ((RepA == RepB)){
+      varname <- paste0("T",nr_runA,"_",nr_runB) #make a name so you can backtrace which replicates are compared
+      #print(varname)
+      compareVar <- input_df %>% filter(UniqueID == paste(samples_comb[1,n_col]) | UniqueID == paste0(samples_comb[2,n_col])) 
+      if (AC == TRUE){
+      plot = "absolute change"
+      intercept = 0
+      if (is.na((abs(compareVar[[variable]][1]) > abs(compareVar[[variable]][2])))){
+        correlation_samples<- compareVar %>%
+        mutate(foldchange=NA)
+      }
+      else if (abs(compareVar[[variable]][1]) >= abs(compareVar[[variable]][2])){
+        correlation_samples<- compareVar %>%
+        mutate(foldchange= abs(compareVar[[variable]][1])-abs(compareVar[[variable]][2]))
+      } else {
+        correlation_samples<- compareVar %>%
+        mutate(foldchange= abs(compareVar[[variable]][2])-abs(compareVar[[variable]][1]))
+      }}
+      else if (AC == FALSE){
+      plot = "fold change"
+      intercept = 1
+      if (is.na((abs(compareVar[[variable]][1]) > abs(compareVar[[variable]][2])))){
+        correlation_samples<- compareVar %>%
+        mutate(foldchange=NA)
+      }
+      else if (abs(compareVar[[variable]][1]) >= abs(compareVar[[variable]][2])){
+        correlation_samples<- compareVar %>%
+        mutate(foldchange= abs(compareVar[[variable]][1])/abs(compareVar[[variable]][2]))
+      } else {
+        correlation_samples<- compareVar %>%
+        mutate(foldchange= abs(compareVar[[variable]][2])/abs(compareVar[[variable]][1]))
+      }}
+      
+      FC_input<-correlation_samples %>% 
+        mutate(Tube=duplicate_type, Replicates=varname, BiologicalReplicate = paste0(RepA,"-",RepB)) %>%
+        mutate(ReplID = paste0(Tube,"-",Replicates))
+      FC_input <- FC_input %>% mutate(inputType = paste0(dfName))
+      if ((FC_input$TimeLapse != c("T24", "T72"))){
+      fold_change_input_all <- rbind(fold_change_input_all, as.data.frame(FC_input))}
+      }
+    }
+  }
+}
+FC <- fold_change_input_all %>% dplyr::group_by(Tube,Replicates,BiologicalReplicate) %>%
+  mutate(ReplID = paste0(Tube,"-",Replicates)) %>% select(c(ReplID, foldchange, Replicates, inputType)) %>% distinct(ReplID, .keep_all = TRUE)
+  
+
+print(ggplot(FC, aes(x=reorder(Tube,foldchange, FUN = function(x) -mean(x, na.rm = TRUE)), y = foldchange)) + geom_boxplot() + geom_beeswarm(groupOnX=TRUE, aes(col = Replicates))  + geom_hline(yintercept = intercept, linetype = "dashed", color = "gray") + labs(subtitle = "ordered by mean", title = paste0(plot, " of ", dfName), y = paste0(plot), x = "Tube", col = "Comparison") + scale_color_hue(labels = c("0h vs 24h", "0h vs 72h")) +
+  scale_fill_manual(values=color_panel) + theme_point+
+  stat_summary(
+    geom = "point",
+    fun.y = "mean",
+    col = "black",
+    size = 2,
+    shape = 24,
+    fill = "white"
+  )) 
+return(FC)
+}
+```
+
+# Sequencing and preprocessing QC
+All samples were sequenced on a Novaseq6000 SP flow cell, paired-end, 2x50 cycles, in three runs. The order of the tubes was randomized across sequencing runs. Run metrics look nominal.
+
+1. NVQ_Run037
+  - % ≥Q30: 94%
+  - % clusters PF: 83%
+  - Yield: 123.22 Gbp
+2. NVQ_Run047
+  - % ≥Q30: 93.39%
+  - % clusters PF: 82.30%
+  - Yield: 119.84 Gbp
+3. NVQ_Run051
+  - % ≥Q30: 93.99%
+  - % clusters PF: 82.80%
+  - Yield: 120.46 Gbp
+  
+## Pipeline parameters and MultiQC reports
+MultiQC reports of the pipeline can be found in this github repository under `data/20200120_multiqc_report.html`
+
+The script of the pipeline to see the parameters can be found on `./code/preprocessing`. Other supporting files and documentation on the meth atlas deconvolution can be found at https://github.com/rmvpaeme/cfRRBS_manuscript.
+
+## Number of reads in different stages of the pipeline
+All reads were subsampled to 18M reads so that there is a fair comparison between all metrics (e.g. if one sample is sequenced deeper it will probably yield more CpGs compared to a sample that was sequenced less deep).
+
+The reads were counted on the fastq level and plotted in the following plots. 
+
+## Total reads after subsampling
+
+```{r}
+p1 <- ggplot(sample_annotation,aes(x=TimeLapse,y=as.numeric(`total_reads`)/1e6, col=BiologicalReplicate, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+geom_hline(yintercept = 18, color = "black", linetype = "solid") +
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="Total reads per sample - split by tube", y = "M reads")
+
+p1
+
+ggsave("./plots/reads_after_trim.png", plot = ggplot2::last_plot(), width = 6, height =4 , dpi = 300)
+
+describe_param <- sample_annotation %>% group_by(Tube) %>% mutate(prct_after_trimming = (as.numeric(`total_reads`)/1e6)/18) %>% select(prct_after_trimming, Tube) 
+
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+## Duplicate percentage after subsampling
+
+```{r}
+p1 <- ggplot(sample_annotation, aes(x=TimeLapse,y=PERCENT_DUPLICATION*100, col=BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, 100))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="Duplicate percentage (Picard) - split by tube", y = "% duplicates")
+
+p1
+
+ggsave("./plots/duplicate_prct.png", plot = ggplot2::last_plot(), width = 6, height =4 , dpi = 300)
+```
+
+## Bisulfite conversion efficiency
+
+Bisulfite conversion is assessed by evaluating the CHH methylation, which is normally unmethylated. Theoretically, 100 - CHH methylation % should be 100, as this equals an 100% conversion efficiency. In practice, this should be >99%. We can see from our data that bisulfite conversion was successful in every sample.
+
+```{r}
+p1 <- ggplot(sample_annotation,aes(x=TimeLapse,y=100-as.numeric(`percent_chh_meth`), col=BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  ylim(97, 100)+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="Bisulfite conversion efficiency - split by tube", y = "100 - CHH meth percentage")
+
+p1
+
+ggsave("./plots/bisulfit_eff.png", plot = ggplot2::last_plot(), width = 6, height =4 , dpi = 300)
+
+describe_param <- sample_annotation %>% group_by(Tube) %>% mutate(bisulfite_conv = (100-as.numeric(`percent_chh_meth`))) %>% select(bisulfite_conv, Tube) 
+
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+
+## Mapping efficiency
+
+Mapping efficiency is as expected (between 60-70%). In EDTA tubes, the mapping efficiency increases with time, presumably due to WBC degradation. 
+
+```{r}
+p1 <- ggplot(sample_annotation,aes(x=TimeLapse,y=MappingPrct , col=BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  ylim(50, NA)+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="Mapping efficiency - split by tube", y = "Uniquely aligned reads (%)")
+
+p1
+
+ggsave("./plots/mapping_eff.png", plot = ggplot2::last_plot(), width = 6, height =4 , dpi = 300)
+
+describe_param <- sample_annotation %>% group_by(Tube) %>%  select(MappingPrct, Tube) 
+
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+
+## Percentage on bait
+
+Over 80% of the reads map within the MspI regions, this is not timepoint or tube dependent.
+
+```{r}
+p_on_bait <- ggplot(sample_annotation,aes(x=TimeLapse,y=Prct_on_bait, color = BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  ylim(60, 100)+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="MspI efficiency", y = "Reads aligning within MspI regions (%)")
+
+p_on_bait
+
+ggsave("./plots/on_bait.png", plot = ggplot2::last_plot(), width = 6, height =4 , dpi = 300)
+
+sample_annotation$Prct_on_bait_scaled <- scale(sample_annotation$Prct_on_bait, center = FALSE, scale = TRUE)
+
+
+describe_param <- sample_annotation %>% group_by(Tube) %>%  select(Prct_on_bait, Tube) 
+
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+
+
+FC <- generateFC(input_df = sample_annotation , variable = "Prct_on_bait", dfName = "percentage on bait", AC = TRUE)
+names(FC)[names(FC) == 'foldchange'] <- 'prct_on_bait_AC'
+FC_all <- FC %>% select(-inputType)
+
+p_fc_on_bait <- ggplot2::last_plot()
+```
+
+# Tube content and overall CpG methylation
+## Absolute DNA content
+The absolute DNA content was measured with the FEMTO Pulse for all samples. Two microliter of the eluate was used. 
+
+```{r}
+sample_annotation$ngDNA_per_mL_plasma_FP <- sample_annotation$FEMTO_conc_nguL*75/(as.numeric(sample_annotation$PlasmaInputV)/1000)
+
+describe_param <- sample_annotation %>% select(Tube, ngDNA_per_mL_plasma_FP) 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+
+p1 <- ggplot(sample_annotation,aes(x=TimeLapse,y=ngDNA_per_mL_plasma_FP, col=BiologicalReplicate, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="DNA content measured with the Femto PULSE", y = "ng/mL plasma, measured with Femto PULSE")
+
+p1
+
+FC <- generateFC(input_df = sample_annotation , variable = "ngDNA_per_mL_plasma_FP", dfName = "absolute DNA content", AC = FALSE)
+```
+
+## Relative DNA content
+
+- If we estimate the relative DNA content by looking at the mapped reads vs lambda spike-in (which are added before library preparation), we can see that DNA content increases at T72 in EDTA, while decreasing in the preservation tubes (which we also saw on the Femto).
+- Overall, preservation tubes also seem to contain less DNA. 
+
+```{r}
+EndoVsLambda <- function(Donor, Comparison){
+  DNAcontent <- sample_annotation %>% filter(BiologicalReplicate == Donor)
+  test <- log_rescaling_CI(DNAcontent, measurevar="MappedVsLambda", groupvar=c("SampleName"))
+  
+  rescale <- test %>% filter(SampleName == Comparison) %>% dplyr::select(measurevar_log_resc)
+  rescale <- unlist(rescale)
+  
+  
+  p1 <- ggplot(test,aes(x=TimeLapse,y=(10^measurevar_log_resc/10^rescale), color = Tube, group = Evolution))+
+    geom_point()+geom_line()+
+    theme_point +
+    labs(y = "Relative endogenous DNA concentration", title="DNA concentration", subtitle = paste0("Endogenous DNA vs Lamda (rescaled vs ", Comparison, ")"))+  
+    scale_y_log10(limits = c(0.1,20)) +
+    #ylim(0.1,15)+
+    geom_hline(yintercept = 1, linetype="dashed",colour="grey88") +
+    scale_color_manual(values=color_panel)
+  
+  p1
+}
+
+#plot_data <- bind_rows(read_csv("../bwa_data/MappedVsLambda_bwa.csv"), sample_annotation)
+sample_annotation$MappedVsLambda_pg_equivalent <- (sample_annotation$MappedVsLambda*5)/11.1
+sample_annotation$MappedVsLambda_ng_equivalent <- (sample_annotation$MappedVsLambda*0.005)/11.1
+
+sample_annotation$ngDNA_per_mL_plasma_lambda <- sample_annotation$MappedVsLambda_ng_equivalent*75/(as.numeric(sample_annotation$PlasmaInputV)/1000)
+
+p_endoDNA <- ggplot(sample_annotation,aes(x=TimeLapse,y=(ngDNA_per_mL_plasma_lambda), col=BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="Relative endogenous DNA content", y = "cfDNA ng/mL plasma (lambda eq.)")
+
+p_endoDNA
+
+FC <- generateFC(input_df = sample_annotation , variable = "ngDNA_per_mL_plasma_lambda", dfName = "relative DNA content", AC = FALSE)
+names(FC)[names(FC) == 'foldchange'] <- 'MappedVsLambda_FC'
+FC_all <- merge(FC %>% select(-inputType), FC_all, on = c("Tube", "BiologicalReplicate", "ReplID", "Replicates"))
+
+p_endoDNA_fc <- ggplot2::last_plot()
+
+describe_param <- sample_annotation %>% group_by(Tube) %>% select(Tube, ngDNA_per_mL_plasma_lambda, TimeLapse) %>% filter(TimeLapse == "T0" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+describe_param <- sample_annotation %>% group_by(Tube) %>% select(Tube, ngDNA_per_mL_plasma_lambda, TimeLapse) %>% filter(TimeLapse == "T72" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+
+describe_param <- sample_annotation %>% group_by(Tube) %>% select(Tube, ngDNA_per_mL_plasma_lambda, TimeLapse) %>% filter(TimeLapse == "T0" & Tube == "Roche") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+describe_param <- sample_annotation %>% group_by(Tube) %>% select(Tube, ngDNA_per_mL_plasma_lambda, TimeLapse) %>% filter(TimeLapse == "T72" & Tube == "Roche") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+#### Donor 1
+```{r}
+EndoVsLambda("DONOR1", "D1_EDTA_t0")
+```
+
+#### Donor 2
+```{r}
+EndoVsLambda("DONOR2", "D2_EDTA_t0")
+```
+
+#### Donor 3
+```{r}
+EndoVsLambda("DONOR3", "D3_EDTA_t0")
+```
+
+## Correlation between relative and absolute DNA content
+```{r}
+require(ggpubr)
+p1 <- ggplot(sample_annotation,aes(x=ngDNA_per_mL_plasma_FP,y=ngDNA_per_mL_plasma_lambda, col=Tube))+
+  geom_point()+
+  theme_point+
+  geom_abline(slope=1, intercept=0, color = "gray", linetype = "dashed")+
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="Correlation plot of estimated cfDNA content", y = "cfDNA ng/mL plasma (lambda equivalent)", x = "cfDNA ng/mL plasma (FEMTO Pulse)") +
+  stat_cor(method = "pearson", aes(col = FALSE, label=paste(..r.label.., cut(..p..,breaks = c(-Inf, 0.0001, 0.001, 0.01, 0.05, Inf), labels = c("'****'", "'***'", "'**'", "'*'", "'ns'")), sep = "~")))
+
+
+p1
+```
+
+# Reading in CpG methylation calls
+The next block imports all coverage files and merges them into a single dataframe. The coverage files from this manuscript can be found at ArrayExpress identifier ####. 
+
+```{r}
+## Above read cutoff
+cov_df <- data.frame("CpG_loc" = character())
+
+files<-list.files(data_path,recursive=TRUE)
+files<-files[grep("18.cov$", files)]
+for(i in 1:length(files)){
+  tmp<-data.table::fread(paste0(data_path,files[i]), header=F, sep="\t", data.table=FALSE)
+  name_sample<-gsub("_.*", "", files[i])
+  colnames(tmp) <- c("chr","start","stop","beta","meth","unmeth")
+  tmp <- tmp %>% filter(meth+unmeth >= readcutoff)
+  tmp <- tmp %>% mutate(CpG_loc = paste0(chr,".", start,".",stop))
+  tmp$beta <- (tmp$beta / 100)
+  tmp1<-tmp[,c("CpG_loc","beta")]
+
+  colnames(tmp1)<-c("CpG_loc", name_sample)
+    
+  cov_df<-full_join(cov_df,tmp1,by=c("CpG_loc"))
+}
+
+cov_df <- as.tibble(cov_df)
+cov_df_DNA_ID <- cov_df
+colnames(cov_df)[-1] <- sample_annotation$SampleName[match(names(cov_df[,-1]), sample_annotation$UniqueID)] 
+
+```
+
+## PCA plots
+
+- Most samples seem to cluster close together, except for EDTA T72 (as expected on the FEMTO profile) and except for Roche T24 (not expected on the FEMTO profile).
+- No other subclusters are present based on tube or timepoint
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+
+pca_counts <- cov_df[,-c(1)]
+pca_counts <- pca_counts %>%  drop_na()
+pca_counts <- pca_counts[apply(pca_counts, 1, var) != 0, ]
+
+pca_counts <- as_tibble(cbind(nms = names(pca_counts), t(pca_counts)))
+pca_counts_names <- pca_counts[,1]
+pca_counts <- pca_counts[,-1]
+pca_counts <- sapply(pca_counts, function(x) as.numeric(as.character(x)))
+
+df_pca <- prcomp(pca_counts, scale = TRUE)
+df_out <- as.data.frame(df_pca$x)
+df_out$SampleName <- pca_counts_names$nms
+pca_annotated<-merge(df_out,sample_annotation, by.x = "SampleName", by.y = "SampleName")
+
+p1 <- ggplot(pca_annotated,aes(x=PC1,y=PC2, color=Tube))+
+  geom_point(aes(shape=TimeLapse)) +
+  #geom_text_repel(size=3, aes())+
+  #facet_wrap(~TubeType) +
+  labs(title="PCA plot (beta values)") +
+  theme_point+
+  scale_color_manual(values=color_panel)
+ggplotly(p1)
+
+p1 <- ggplot(pca_annotated,aes(x=PC1,y=PC2, color=Tube))+
+  geom_point(aes(shape=BiologicalReplicate)) +
+  #geom_text_repel(size=3, aes())+
+  #facet_wrap(~TubeType) +
+  labs(title="PCA plot (beta values)") +
+  theme_point+
+  scale_color_manual(values=color_panel)
+ggplotly(p1)
+```
+
+## Number of CpGs
+```{r}
+nCpGs_filtered <- as.data.frame(sapply( cov_df_DNA_ID, function(f) sum(complete.cases(f))))
+colnames(nCpGs_filtered) <- c("number_of_cpgs_filtered")
+nCpGs_filtered <- as_tibble(cbind(UniqueID = rownames(nCpGs_filtered), nCpGs_filtered))
+nCpGs_filtered <- merge(nCpGs_filtered, sample_annotation)
+
+# Unfiltered data
+nCpGs_unfiltered <- data.frame("UniqueID" = character(), "number_of_cpgs_unfiltered" = numeric())
+
+files<-list.files(data_path,recursive=TRUE)
+files<-files[grep("18.cov$", files)]
+for(i in 1:length(files)){
+  #tmp<-read.table(paste0(data_path,files[i]), header=T, sep="\t")
+  tmp<-data.table::fread(paste0(data_path,files[i]), header=F, sep="\t", data.table=FALSE)
+  colnames(tmp) <- c("chr","start","stop","beta","meth","unmeth")
+  percent_cpg_meth_unfiltered <- mean(tmp$beta)
+  percent_cpg_meth_filtered <- tmp %>% filter(meth+unmeth >= readcutoff) %>% summarise(mean = mean(beta)) %>% pull(mean)
+  #name_sample<-gsub(".*/","",sub("*_S[0-9]{1,2}_R1_subsamp10M.cov","",sub("*_S[0-9]{1,2}_R1_subsamp10M.cov","",files[i])))
+  name_sample<-gsub("_.*", "", files[i])
+  nCpGs <- nrow(tmp)
+  nCpGs <- data.frame("number_of_cpgs_unfiltered" = nCpGs, "UniqueID" = name_sample, "percent_cpg_meth_unfiltered" = percent_cpg_meth_unfiltered, "percent_cpg_meth_filtered" = percent_cpg_meth_filtered)
+  nCpGs_unfiltered <- rbind(nCpGs, nCpGs_unfiltered)  
+  #cov_df_unfiltered<-full_join(cov_df_unfiltered,tmp1,by=c("CpG_loc"))
+}
+
+nCpGs <- merge(nCpGs_filtered, nCpGs_unfiltered)
+nCpGs$number_of_cpgs_filtered <- as.numeric(nCpGs$number_of_cpgs_filtered)
+```
+
+### Filtered
+```{r}
+#plot_data <- bind_rows(read_csv("../bwa_data/number_of_cpgs_filtered_bwa.csv"), nCpGs)
+
+p_noCpGs <- ggplot(nCpGs,aes(x=TimeLapse,y=number_of_cpgs_filtered/1e6, col=BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="# CpGs (million)",title="Number of CpGs detected (filt.)")
+
+p_noCpGs
+
+FC <- generateFC(input_df = nCpGs, variable = "number_of_cpgs_filtered", dfName = "number of CpGs (filt.)", AC = FALSE)
+names(FC)[names(FC) == 'foldchange'] <- 'number_of_cpgs_filtered_FC'
+FC_all <- merge(FC %>% select(-inputType), FC_all, on = c("Tube", "BiologicalReplicate", "ReplID", "Replicates"))
+
+p_noCpGs_FC <- ggplot2::last_plot()
+
+describe_param <- nCpGs %>% group_by(Tube) %>% select(Tube, number_of_cpgs_filtered, TimeLapse) %>% filter(TimeLapse == "T0" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+describe_param <- nCpGs %>% group_by(Tube) %>% select(Tube, number_of_cpgs_filtered, TimeLapse) %>% filter(TimeLapse == "T72" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+### Unfiltered
+```{r}
+#plot_data <- bind_rows(read_csv("../bwa_data/number_of_cpgs_unfiltered_bwa.csv"), nCpGs)
+
+p_noCpGs_unfilt <- ggplot(nCpGs,aes(x=TimeLapse,y=number_of_cpgs_unfiltered/1e6, col=BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="# CpGs (million)",title="Absolute number of CpGs detected (unfilt.)")
+
+p_noCpGs_unfilt
+
+FC <- generateFC(input_df = nCpGs, variable = "number_of_cpgs_unfiltered", dfName = "number of CpGs (unfilt.)", AC = FALSE)
+names(FC)[names(FC) == 'foldchange'] <- 'number_of_cpgs_unfiltered_FC'
+FC_all <- merge(FC %>% select(-inputType), FC_all, on = c("Tube", "BiologicalReplicate", "ReplID", "Replicates"))
+
+p_noCpGs_unfilt_FC <- ggplot2::last_plot()
+
+describe_param <- nCpGs %>% group_by(Tube) %>% select(Tube, number_of_cpgs_unfiltered, TimeLapse) %>% filter(TimeLapse == "T0" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+describe_param <- nCpGs %>% group_by(Tube) %>% select(Tube, number_of_cpgs_unfiltered, TimeLapse) %>% filter(TimeLapse == "T72" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+
+## Genome-wide CpG methylation
+### Unfiltered
+
+```{r}
+#plot_data <- bind_rows(read_csv("../bwa_data/percent_cpg_meth_bwa.csv"), sample_annotation)
+
+p_cpgmeth_unfilt <- ggplot(nCpGs,aes(x=TimeLapse,y=percent_cpg_meth_unfiltered, col=BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  ylim(30, 60)+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="Genome-wide CpG methylation", y = "genome-wide CpG meth. (%)")
+
+p_cpgmeth_unfilt
+
+FC <- generateFC(input_df = nCpGs, variable = "percent_cpg_meth_unfiltered", dfName = "CpG methylation %", AC = TRUE)
+names(FC)[names(FC) == 'foldchange'] <- 'percent_cpg_meth_unfilt_AC'
+FC_all <- merge(FC %>% select(-inputType), FC_all, on = c("Tube", "BiologicalReplicate", "ReplID", "Replicates"))
+
+p_cpgmeth_unfilt_FC <- ggplot2::last_plot()
+
+describe_param <- nCpGs %>% group_by(Tube) %>% select(Tube, percent_cpg_meth_unfiltered, TimeLapse) %>% filter(TimeLapse == "T0" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+describe_param <- nCpGs %>% group_by(Tube) %>% select(Tube, percent_cpg_meth_unfiltered, TimeLapse) %>% filter(TimeLapse == "T72" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+# Reproducibility with ALC {.tabset}
+## Interpretation
+The ALC is a measure of reproducibility per CpG.
+
+- If there are two replicates, the reproducibility reaches a maximum if the difference between two measurements is 0. If it's not zero, it means that the reproducibility is lower.
+- If we calculate this for all detected CpGs between two replicates and make a cumulative plot, then the area between the curve and x = 0 (the area left of the curve) gives an indication of reproducibility. 
+
+## Individual ALC plots
+
+```{r, fig.height=16, fig.width=13.5}
+cov_df_DNA_ID <- cov_df_DNA_ID %>% drop_na()
+p = list()
+ALC_input_all <- data.frame() 
+for (duplicate_type in unique(sample_annotation$Tube)){
+  sample_duplicates<-sample_annotation%>% filter(Tube==duplicate_type) %>%
+    dplyr::select(UniqueID,TimeLapse,Tube, BiologicalReplicate)
+  if(nrow(sample_duplicates)>1){
+    #print(duplicate_type)
+   # double_positives_sample<-double_positives %>% dplyr::select(ensembl_gene_id,sample_duplicates$UniqueID) # only keep the replicates of one type
+   
+    samples_comb <- combn(sample_duplicates$UniqueID,2) #compare 2 of the 3 samples at a time
+    for (n_col in 1:ncol(samples_comb)) {
+      #print(samples_comb[,n_col])
+      nr_runA <- gsub("^[A-Z]+","",sample_annotation[sample_annotation$UniqueID== samples_comb[1,n_col],]$TimeLapse)
+      nr_runB <- gsub("^[A-Z]+","",sample_annotation[sample_annotation$UniqueID== samples_comb[2,n_col],]$TimeLapse)
+      RepA <- sample_annotation[sample_annotation$UniqueID== samples_comb[1,n_col],]$BiologicalReplicate
+      RepB <- sample_annotation[sample_annotation$UniqueID== samples_comb[2,n_col],]$BiologicalReplicate
+     if ((RepA == RepB)){
+      varname <- paste0("Rep",nr_runA,"_",nr_runB) #make a name so you can backtrace which replicates are compared
+      #print(varname)
+      correlation_samples<-cov_df_DNA_ID  %>%
+        mutate(ratio=abs(get(samples_comb[1,n_col])-get(samples_comb[2,n_col]))) %>%
+        dplyr::select(ratio,CpG_loc) #%>% drop_na()
+      ALC_input<-correlation_samples %>% arrange(ratio) %>% # order by log2 ratio and then make a rank (counter) and rescale this to 1 (perc_counter)
+        #mutate(rank=percent_rank(ratio)) %>% # this does not work: gives everything with log2ratio = 0 rank 0
+        mutate(counter = seq(1:nrow(cov_df_DNA_ID)), Tube=duplicate_type, Replicates=varname, BiologicalReplicate = paste0(RepA,"-",RepB)) %>%
+        mutate(ReplID = paste0(Tube,"-",Replicates), perc_counter = counter/nrow(cov_df_DNA_ID))
+     
+      
+     # if (!(c("Rep24_72", "Rep72_24") %in% ALC_input_all$Replicates)){
+      ALC_input_all <- rbind(ALC_input_all, ALC_input)
+     # }
+      }
+    }
+  }
+}
+ALC_input_all <- ALC_input_all %>% filter(!(Replicates %in% c("Rep24_72", "Rep72_24")))
+max_ALC <-max(ALC_input_all$ratio) # calculate the max ALC over everything (necessary for area calculation -> should always be the same in order to compare among kits)
+ALC <- ALC_input_all %>% dplyr::group_by(Tube,Replicates,BiologicalReplicate) %>%
+  dplyr::summarise(ALC_calc = sum(ratio)/(max_ALC)) %>%
+  #dplyr::summarise(ALC_calc = sum(ratio)/(max_ALC)) %>%
+  mutate(ReplID = paste0(Tube,"-",Replicates))
+ALC$ALC_scaled <- (ALC$ALC_calc - min(ALC$ALC_calc))/diff(range(ALC$ALC_calc))
+ALC_df <- NULL
+
+for (replicates in unique(ALC_input_all$ReplID)) { 
+  for (techrep in c("DONOR1-DONOR1", "DONOR2-DONOR2", "DONOR3-DONOR3")){
+   # replicates = "DNA Streck-Rep24_0"     
+  #  techrep = "TUBE1-TUBE1" # plot the ALC (= the colored part of the plot)
+    tmp <- ALC_input_all %>% dplyr::filter(ReplID==replicates)  %>%
+                 dplyr::filter(BiologicalReplicate == techrep)
+    
+    y <- ALC_input_all %>% dplyr::filter(ReplID==replicates)  %>%
+                 dplyr::filter(BiologicalReplicate == techrep) %>% pull(ratio)
+    y <- y/max_ALC
+    x <- ALC_input_all %>% dplyr::filter(ReplID==replicates)  %>%
+                 dplyr::filter(BiologicalReplicate == techrep) %>% pull(perc_counter)
+    id <- order(x)
+    
+    AUC <- sum(diff(x[id])*rollmean(y[id],2))
+   # ALC_value <- 1-AUC
+    tmp_1 <- data.frame(UniqueID = paste0(techrep, "_", replicates), ALC_rescaled = AUC)
+    ALC_df <- rbind(tmp_1, ALC_df)
+    
+  if (nrow(tmp) != 0){ 
+  plot_ID <- paste0(replicates, " - ", techrep)
+  tube_id <- strsplit(replicates, "-")[[1]][1]
+  time_id <- strsplit(replicates, "-")[[1]][2]
+  time_id <- sub("Rep", "", time_id)
+  time_id <- paste0(sub("_", "h vs ", time_id), "h")
+  donor_id <- strsplit(techrep, "-")[[1]][1]
+  donor_id <- sub("DONOR", "D",donor_id)
+  p[[plot_ID]] <- ggplot( tmp %>%
+          mutate(ratio_resc = ratio/max_ALC))+
+        geom_line(aes(x=ratio_resc,y=perc_counter))+
+        #facet_wrap(~ReplID) +
+        geom_ribbon(aes(x=ratio_resc,ymin=perc_counter,ymax=1), fill="lightblue")+
+        geom_hline(aes(yintercept = 1))+
+        theme_classic()+
+        scale_x_continuous(limits=c(0,1)) +
+        scale_y_continuous(expand = c(0, 0)) +
+        theme(legend.position = "none") +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1), plot.title = element_text(size = 14), plot.subtitle = element_text(size = 14)) +
+        labs(title=paste0(tube_id, " ", donor_id, "\n", time_id),
+             #subtitle=paste("ALC:", round(ALC %>% ungroup() %>% dplyr::filter(ReplID==replicates)  %>%
+             #    dplyr::filter(BiologicalReplicate == techrep) %>% select(ALC_calc),2)), #print ALC for this particular comparison!
+             subtitle=paste("ALC:", round(AUC,4)), #print ALC for this particular comparison!
+             y=" ",x=" ")
+    }
+  }
+}
+ALC$UniqueID <- paste0(ALC$BiologicalReplicate, "_", ALC$ReplID)
+ALC <- merge(ALC, ALC_df)
+
+figure <- ggarrange(plotlist = p, common.legend = TRUE)
+annotate_figure(figure, left = "rank", bottom = "rescaled difference")
+ggsave("./plots/ALC_overview.pdf", plot = ggplot2::last_plot(), dpi = 300)
+```
+
+
+## ALC summary
+```{r, fig.align="center"}
+ALC_melt <- left_join(ALC, sample_annotation[,c("Tube")], by="Tube")
+ALC$BiologicalReplicate <- gsub("[-]TUBE[0-9]*","", ALC$BiologicalReplicate)
+ALC$Replicates <- gsub("^Rep24_0$","T0-T24", ALC$Replicates)
+ALC$Replicates <- gsub("^Rep0_24$","T0-T24", ALC$Replicates)
+ALC$Replicates <- gsub("^Rep72_0$","T0-T72", ALC$Replicates)
+ALC$Replicates <- gsub("^Rep0_72$","T0-T72", ALC$Replicates)
+ALC$Replicates <- gsub("^Rep72_24$","T24-T72", ALC$Replicates)
+ALC$Replicates <- gsub("^Rep24_72$","T24-T72", ALC$Replicates)
+
+p_alc <- ggplot(ALC,aes(x=Replicates,y=ALC_rescaled, col=BiologicalReplicate, group = BiologicalReplicate))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5, scales="free_x") +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(y="ALC",title="Pairwise ALCs", subtitle="lower ALC = better")
+p_alc
+ggsave("./plots/ALC_linePlot.pdf", plot = ggplot2::last_plot(), dpi = 300)
+```
+
+## ALC summary boxplot
+```{r}
+p_alc_changes <- ggplot(ALC, aes(x=reorder(Tube,ALC_rescaled , FUN = function(x) -mean(x, na.rm = TRUE)), y = ALC_rescaled)) + geom_boxplot() + geom_beeswarm(aes(col = Replicates))  + geom_hline(yintercept = 0, linetype = "dashed", color = "gray") + labs(subtitle = "ordered by mean", title = "ALC within each donor between timepoints", y = "ALC", x = "Tube", col = "Comparison") +
+  scale_fill_manual(values=color_panel) + theme_point+
+  stat_summary(
+    geom = "point",
+    fun.y = "mean",
+    col = "black",
+    size = 2,
+    shape = 24,
+    fill = "white"
+  )
+
+p_alc_changes
+
+#FC <- generateFC_modified(input_df <- ALC %>% ungroup(), variable <- "ALC_calc", dfName <- "ALC")
+ALC_mean <- ALC %>% dplyr::group_by(Tube) %>% dplyr::summarise(ALC_mean = mean( ALC_rescaled*100))
+ggsave("./plots/ALC_FC.pdf", plot = ggplot2::last_plot(), dpi = 300)
+```
+
+
+# Meth atlas
+In order to estimate immune content, deconvolution with meth atlas was done in a similar fashion as in a previous preprint (https://www.biorxiv.org/content/10.1101/795047v1). More information is available at https://github.com/rmvpaeme/cfRRBS_manuscript.
+
+The deconvolution script was edited to select the top 100 hyper and hypomethylated regions.
+
+```{r}
+require(pheatmap)
+
+deconv <- read_csv("../data/deconvolution_results/methatlas_deconv_output_tubestudy.csv") %>% t()
+colnames(deconv) <- deconv[1,]
+deconv <- deconv[-1, ]
+rownames <- gsub("_.*", "", rownames(deconv))
+#rownames <- gsub("-.*", "", rownames(deconv))
+deconv <- as.data.frame(apply(deconv,2,FUN = as.numeric))
+rownames(deconv) <- rownames
+deconv <- deconv*100
+
+p1 <- ggplot(deconv %>% mutate(UniqueID = rownames(.)) %>% melt() %>% filter(value != 0),aes(x=UniqueID,y=value, fill = variable))+
+  geom_bar(stat = "identity") + theme_bar+
+  labs(y = "sum of %", title="Deconvolution of cfDNA - meth atlas", fill = "tissue type")+
+  scale_color_manual(values=color_panel)
+
+ggplotly(p1)
+
+```
+
+```{r, fig.height= 8, fig.width= 6}
+pheatmap(deconv, show_colnames = TRUE)
+```
+
+```{r}
+deconv$immune <- deconv$`B-cells_EPIC` + deconv$`CD4T-cells_EPIC` + deconv$`CD8T-cells_EPIC` + deconv$Monocytes_EPIC + deconv$`NK-cells_EPIC` + deconv$Neutrophils_EPIC
+deconv$UniqueID <- rownames(deconv)
+deconv_melt <-  deconv %>% melt(value.name = "fraction")
+deconv <- merge(x = deconv, y = sample_annotation, by.y = "UniqueID", by.x = "UniqueID")
+deconv_melt <- merge(x = deconv_melt, y = sample_annotation, by.y = "UniqueID", by.x = "UniqueID")
+deconv_methatlas <- deconv
+deconv_methatlas$technique <- "methatlas"
+deconv_methatlas$immune.methatlas <- deconv_methatlas$immune
+
+boxplot <- ggplot(deconv_melt %>% filter(fraction > 0) %>% filter(variable != "immune"), aes(x = variable, y = fraction, fill = BiologicalReplicate))+ geom_boxplot() + geom_beeswarm() + theme_bar + labs(x = "cell type", y = "%")
+boxplot
+  
+p1 <- ggplot(deconv,aes(x=TimeLapse,y=immune, color = Tube, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~BiologicalReplicate, ncol = 5) + 
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated immune fraction (%)",title="Deconvolution of cfDNA - immune fraction")
+
+p1
+
+p_immune <- ggplot(deconv,aes(x=TimeLapse,y=immune, color = BiologicalReplicate, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5) + 
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated immune fraction (%)",title="Deconvolution (NNLS) - immune fraction")
+
+p_immune
+
+p_nk_meth <- ggplot(deconv,aes(x=TimeLapse,y=`NK-cells_EPIC`, color = BiologicalReplicate, group = Evolution))+
+  geom_point(size = 2)+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5) + 
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated NK fraction (%)",title="Deconvolution (NNLS) - NK fraction")
+
+p_nk_meth
+
+p1 <- ggplot(deconv,aes(x=TimeLapse,y=`Neutrophils_EPIC`, color = Tube, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~BiologicalReplicate, ncol = 5) + 
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated neutrophil fraction (%)",title="Deconvolution (NNLS) - neutrophil fraction")
+
+p1
+```
+
+```{r, fig.height= 12, fig.width= 9}
+p1 <- ggplot(deconv_melt,aes(x=TimeLapse,y=fraction, color = Tube, group = Evolution))+
+  geom_point()+geom_line()+
+  facet_wrap(~variable)+
+  theme_point + 
+  labs(y = "Estimated fraction (%)", title="Deconvolution of cfDNA per tissue type (NNLS)")+
+  scale_color_manual(values=color_panel)
+
+ggsave(p1, filename = "./plots/full_deconv_methatlas.png", dpi = 300, height=12, width=12)
+ggsave(p1, filename = "./plots/full_deconv_methatlas.svg", dpi = 300, height=12, width=12)
+
+ggplotly(p1)
+```
+
+```{r}
+FC <- generateFC(input_df = deconv, variable = "NK-cells_EPIC", dfName = "NK fraction (NNLS)", AC = TRUE)
+FC %>% filter(Tube == "EDTA") %>% select(foldchange) %>% pull() %>% mean()
+
+p_nk_meth_fc <- ggplot2::last_plot()
+
+describe_param <- deconv %>% group_by(Tube) %>% select(Tube, `NK-cells_EPIC`, TimeLapse) %>% filter(TimeLapse == "T0" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+describe_param <- deconv %>% group_by(Tube) %>% select(Tube, `NK-cells_EPIC`, TimeLapse) %>% filter(TimeLapse == "T72" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+
+FC <- generateFC(input_df = deconv, variable = "Neutrophils_EPIC", dfName = "neutrophil fraction", AC = TRUE)
+FC %>% ungroup() %>% filter(Tube == "EDTA") %>% pull(foldchange) %>% mean()
+FC %>% filter(Tube == "EDTA") %>% select(foldchange) %>% pull() %>% mean()
+
+describe_param <- deconv %>% group_by(Tube) %>% select(Tube, `Neutrophils_EPIC`, TimeLapse) %>% filter(TimeLapse == "T0" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+describe_param <- deconv %>% group_by(Tube) %>% select(Tube, `Neutrophils_EPIC`, TimeLapse) %>% filter(TimeLapse == "T72" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+# CelFiE {.tabset}
+## Meth atlas as reference set 
+
+CelFiE was run with the following parameters:
+
+```
+data = "../data/deconvolution_results/input_for_celfie/methatlas_sample_reference_tims.txt"
+num_samples = 45
+iterations = 1000
+num_unk = 1
+iteration_number = 1
+convergence_criteria = 0.001
+num_random_restart = 1
+```
+
+The sample and reference order for the `methatlas_sample_reference_tims.txt` can be found at `../data/deconvolution_results/input_for_celfie/methatlas_reference_file_key.txt` and `../data/deconvolution_results/input_for_celfie/methatlas_sample_key.txt`
+
+*MAIN CONCLUSION* 
+CelFiE and the meth-atlas reference set are not compatible.
+
+```{r}
+deconv <- as.data.frame(read_tsv("../data/deconvolution_results/CelFiE_output_methatlas.tsv"))
+rownames <- gsub("_.*", "", deconv$X1)
+deconv <- as.data.frame(apply(deconv[,-1],2,FUN = as.numeric))
+rownames(deconv) <- rownames
+deconv <- deconv*100
+
+p1 <- ggplot(deconv %>% mutate(UniqueID = rownames(.)) %>% melt() %>% filter(value != 0),aes(x=UniqueID,y=value, fill = variable))+
+  geom_bar(stat = "identity") + theme_bar+
+  labs(y = "sum of %", title="Deconvolution of cfDNA", fill = "tissue type")+
+  scale_color_manual(values=color_panel)
+
+ggplotly(p1)
+```
+
+```{r, fig.height= 8, fig.width= 6}
+pheatmap(deconv, show_colnames = TRUE)
+```
+
+```{r}
+deconv$immune <- deconv$`B-cells_EPIC` + deconv$`CD4T-cells_EPIC` + deconv$`CD8T-cells_EPIC` + deconv$Monocytes_EPIC + deconv$`NK-cells_EPIC` + deconv$Neutrophils_EPIC
+deconv$UniqueID <- rownames(deconv)
+deconv_melt <-  deconv %>% melt(value.name = "fraction")
+deconv <- merge(x = deconv, y = sample_annotation, by.y = "UniqueID", by.x = "UniqueID")
+deconv_melt <- merge(x = deconv_melt, y = sample_annotation, by.y = "UniqueID", by.x = "UniqueID")
+deconv_celfie <- deconv
+deconv_celfie$technique <- "celfie"
+deconv_celfie$immune.celfie <- deconv_celfie$immune
+merged_deconv <- merge(deconv_celfie %>% select(UniqueID, Tube, BiologicalReplicate, Evolution, immune.celfie), deconv_methatlas  %>% select(UniqueID, Tube, BiologicalReplicate, Evolution, immune.methatlas))
+
+boxplot <- ggplot(deconv_melt %>% filter(fraction > 0) %>% filter(variable != "immune"), aes(x = variable, y = fraction))+ geom_boxplot() + theme_bar + labs(x = "cell type", y = "%")
+ggplotly(boxplot)
+
+p1 <- ggplot(deconv,aes(x=TimeLapse,y=`NK-cells_EPIC`, color = Tube, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~BiologicalReplicate, ncol = 5) + 
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated immune fraction (%)",title="Deconvolution of cfDNA - immune fraction")
+
+p1
+
+p1 <- ggplot(deconv,aes(x=TimeLapse,y=immune, color = BiologicalReplicate, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5) +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated immune fraction (%)",title="Deconvolution of cfDNA - immune fraction")
+
+p1
+
+
+p1 <- ggplot(deconv_melt %>% filter(variable != "immune"),aes(x=TimeLapse,y=fraction, color = Tube, group = Evolution))+
+  geom_point()+geom_line()+
+  facet_wrap(~variable)+
+  theme_point + 
+  labs(y = "Estimated fraction (%)", title="Deconvolution of cfDNA per tissue type")+
+  scale_color_manual(values=color_panel)
+
+ggplotly(p1)
+```
+
+```{r}
+FC <- generateFC(input_df = deconv, variable = "NK-cells_EPIC", dfName = "NK fraction (CelFiE)", AC = TRUE)
+#names(FC)[names(FC) == 'foldchange'] <- 'NK_AC'
+#FC_all <- merge(FC %>% select(-inputType), FC_all, on = c("Tube", "BiologicalReplicate", "ReplID", "Replicates"))
+
+#p_immune_fc <- ggplot2::last_plot()
+```
+
+## CelFiE/ENCODE as reference set 
+CelFiE was run with the following parameters:
+
+```
+data = "../data/deconvolution_results/input_for_celfie/rrbs_sample_reference_tims.txt
+num_samples = 45
+iterations = 1000
+num_unk = 1
+iteration_number = 1
+convergence_criteria = 0.001
+num_random_restart = 1
+```
+
+The sample and reference order for the `rrbs_sample_reference_tims.txt` can be found at `../data/deconvolution_results/input_for_celfie/celfie_reference_file_key.txt` and `../data/deconvolution_results/input_for_celfie/celfie_sample_key.txt`
+
+```{r}
+deconv <- as.data.frame(read_tsv("../data/deconvolution_results/CelFiE_output_celfie_with_rrbs.tsv"))
+rownames <- gsub("_.*", "", deconv$X1)
+deconv <- as.data.frame(apply(deconv[,-1],2,FUN = as.numeric))
+rownames(deconv) <- rownames
+deconv <- deconv*100
+deconv <- round(deconv, 4)
+
+p1 <- ggplot(deconv %>% mutate(UniqueID = rownames(.)) %>% melt() %>% filter(value != 0),aes(x=UniqueID,y=value, fill = variable))+
+  geom_bar(stat = "identity") + theme_bar+
+  labs(y = "sum of %", title="Deconvolution of cfDNA", fill = "tissue type")+
+  scale_color_manual(values=color_panel)
+
+ggplotly(p1)
+```
+
+```{r, fig.height= 8, fig.width= 6}
+pheatmap(deconv, show_colnames = TRUE)
+```
+
+```{r}
+deconv$immune <- deconv$`dendritic` + deconv$`eosinophil` + deconv$`macrophage` + deconv$`memory b cell` + deconv$`monocyte` + deconv$`NK cell` + deconv$neutrophil + deconv$`cd8 t-cell` + deconv$`cd4 t-cell`
+deconv$UniqueID <- rownames(deconv)
+deconv_melt <-  deconv %>% melt(value.name = "fraction")
+deconv <- merge(x = deconv, y = sample_annotation, by.y = "UniqueID", by.x = "UniqueID")
+deconv_melt <- merge(x = deconv_melt, y = sample_annotation, by.y = "UniqueID", by.x = "UniqueID")
+deconv_celfie <- deconv
+deconv_celfie$technique <- "celfie"
+deconv_celfie$immune.celfie <- deconv_celfie$immune
+merged_deconv <- merge(deconv_celfie %>% select(UniqueID, Tube, BiologicalReplicate, Evolution, immune.celfie), deconv_methatlas  %>% select(UniqueID, Tube, BiologicalReplicate, Evolution, immune.methatlas))
+
+boxplot <- ggplot(deconv_melt %>% filter(fraction > 0) %>% filter(variable != "immune"), aes(x = variable, y = fraction, fill = BiologicalReplicate))+ geom_boxplot() + theme_bar + labs(x = "cell type", y = "%")
+boxplot
+#ggplotly(boxplot)
+
+p_nk_celfie <- ggplot(deconv,aes(x=TimeLapse,y=`NK cell`, color = BiologicalReplicate, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5) + 
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated NK fraction (%)",title="Deconvolution (CelFiE) - NK fraction")
+
+p_nk_celfie
+
+
+p1 <- ggplot(deconv,aes(x=TimeLapse,y=immune, color = BiologicalReplicate, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~Tube, ncol = 5) +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, 100))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated immune fraction (%)",title="Deconvolution of cfDNA - immune fraction")
+
+p1
+
+p1 <- ggplot(deconv,aes(x=TimeLapse,y=neutrophil, color = Tube, group = Evolution))+
+  geom_point()+geom_line()+
+  theme_point+
+  facet_wrap(~BiologicalReplicate, ncol = 5) +
+  theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+  scale_y_continuous(limits = c(0, NA))+
+  scale_color_manual(values=color_panel) +
+  theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+  labs(x="", y="Estimated neutrophil fraction (%)",title="Deconvolution (CelFiE) - neutrophil fraction")
+
+p1
+
+```
+
+```{r, fig.height=12, fig.width=9}
+p1 <- ggplot(deconv_melt %>% filter(variable != "immune"),aes(x=TimeLapse,y=fraction, color = Tube, group = Evolution))+
+  geom_point()+geom_line()+
+  facet_wrap(~variable)+
+  theme_point + 
+  labs(y = "Estimated fraction (%)", title="Deconvolution of cfDNA per tissue type (CelFiE)")+
+  scale_color_manual(values=color_panel)
+
+ggsave(p1, filename = "./plots/full_deconv_celfie.png", dpi = 300, height=12, width=12)
+ggsave(p1, filename = "./plots/full_deconv_celfie.svg", dpi = 300, height=12, width=12)
+
+ggplotly(p1)
+
+describe_param <- deconv %>% group_by(Tube) %>% select(Tube, `NK cell`, TimeLapse) %>% filter(TimeLapse == "T0" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+describe_param <- deconv %>% group_by(Tube) %>% select(Tube, `NK cell`, TimeLapse) %>% filter(TimeLapse == "T72" & Tube == "EDTA") 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+
+describe_param <- deconv %>% group_by(Tube) %>% select(Tube, `unknown`, TimeLapse) 
+describe(describe_param, quant = c(.25,.75), na.rm = TRUE)
+```
+
+```{r}
+FC <- generateFC(input_df = deconv, variable = "NK cell", dfName = "NK fraction (CelFiE)", AC = TRUE)
+names(FC)[names(FC) == 'foldchange'] <- 'NK_AC'
+FC_all <- merge(FC %>% select(-inputType), FC_all, on = c("Tube", "BiologicalReplicate", "ReplID", "Replicates"))
+p_nk_celfie_fc <- ggplot2::last_plot()
+```
+
+# Comparison of CelFiE vs Meth Atlas
+```{r}
+ggplot(merged_deconv, aes(x = immune.celfie, y = immune.methatlas, color = BiologicalReplicate)) +  geom_point()+
+  theme_point+
+  lims(x = c(0,100), y = c(0,100))+
+    theme(panel.grid.major.x=element_line(linetype = "dashed",color="gray88"), axis.text.x=element_text(size=8)) +
+    scale_color_manual(values=color_panel) +
+    theme(axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) + labs(title="Correlation between immune content with CelFiE and Meth Atlas", y = "immune % with Meth Atlas", x = "Immune % with CelFiE") 
+
+```
+
+# Changes overview
+```{r, fig.height=16, fig.width=10}
+
+figure_L <- ggarrange(
+  p_endoDNA, p_cpgmeth_unfilt, p_noCpGs_unfilt, p_noCpGs, labels = c("A", "C", "E", "G"),
+  common.legend = TRUE, legend = "bottom", ncol = 1, nrow = 4
+  )
+
+figure_R <- ggarrange(
+  p_endoDNA_fc, p_cpgmeth_unfilt_FC, p_noCpGs_unfilt_FC, p_noCpGs_FC, labels = c("B", "D", "F", "H"),
+  common.legend = TRUE, legend = "bottom", ncol = 1, nrow = 4
+  )
+
+fig_total <- ggarrange(figure_L, figure_R, ncol = 2, nrow = 1)
+fig_total
+
+ggsave(fig_total, filename = "./plots/figure_overview_A.png", dpi = 300, height=13, width=9)
+
+```
+
+```{r, fig.height=8, fig.width=10}
+figure_L <- ggarrange(
+  p_nk_meth,  p_nk_celfie, labels = c("I", "K"),
+  common.legend = TRUE, legend = "bottom", ncol = 1, nrow = 2
+  )
+
+figure_R <- ggarrange(
+  p_nk_meth_fc,  p_nk_celfie_fc, labels = c("J", "L"),
+  common.legend = FALSE, legend = "bottom", ncol = 1, nrow = 2
+  )
+
+fig_total <- ggarrange(figure_L, figure_R, ncol = 2, nrow = 1)
+fig_total
+
+ggsave(fig_total, filename = "./plots/figure_overview_B.png", dpi = 300, height=6.5, width=9)
+```
+
+# Change summary
+
+```{r}
+FC_all_means <- FC_all %>%  dplyr::group_by(Tube) %>% dplyr::summarise_all(funs(mean), na.rm = TRUE) %>% select(-c("BiologicalReplicate", "ReplID", "Replicates"))
+FC_all_means <- merge(ALC_mean, FC_all_means)
+FC_all_means_corrplot <- FC_all_means
+rownames(FC_all_means_corrplot) <- FC_all_means_corrplot$Tube
+FC_all_means_corrplot <- scale(FC_all_means[,-1], center = TRUE, scale = TRUE)
+FC_all_means_corrplot <- cor(FC_all_means_corrplot, method = "spearman")
+
+FC_all_means <- FC_all_means %>% melt()
+p1 <- ggplot(FC_all_means, aes(x = variable, y = value, group = Tube, color = Tube))+geom_vline(xintercept = c(1,2,3,4,5), linetype = "dashed", color = "grey") + geom_line() + geom_point() + theme_point + labs(title = "Summary of fold changes", y = "mean change", x = "metric") + lims(y = c(0,NA)) + scale_color_manual(values=color_panel) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + scale_x_discrete(labels=c("ALC_FC" = "ALC", "biotype_FC" = "biotype", "hemolysis_FC" = "hemolysis",
+                              "numbergenes_FC" = "geneCount", "EndoVsSeq_FC" = "concRNA"))
+ggplotly(p1)
+```
+
+# Session info
+```{r}
+sessionInfo()
+```
+

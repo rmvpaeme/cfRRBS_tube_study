@@ -1,0 +1,11 @@
+rrbs: --rrbs
+demultiplex: True
+runfolder: /path/to/bclfiles
+lambdagenome: /path/to/lambda_genome_folder
+humangenome: /path/to/human_genome_folder
+humangenomefa: /path/to/GRCh37-lite.fa
+target: /path/to/RRBS_regions20-200.interval_list
+genomebuild: GRCh37 # or GRCh38 or GRCm38
+sequencer: NovaSeq # or NovaSeq or HiSeq
+darkcycles: False
+dualindex: False

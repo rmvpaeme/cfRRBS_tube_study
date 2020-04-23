@@ -1,0 +1,316 @@
+---
+title: "Genome-wide study of the effect of preservation tubes on the cell-free DNA methylome: supplementary data (differential methylation)"
+author: "Ruben Van Paemel"
+date: "23/04/2020"
+output:
+  html_document:
+    code_folding: hide
+    highlight: kate
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_float: yes
+    df_print: paged
+---
+
+# Introduction
+## RMarkdown set-up
+First, basic parameters are set up in this RMarkdown, such as loading dependencies, setting paths and setting up a uniform plot structure. 
+
+```{r setup, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(warning=FALSE, cache = TRUE, message = FALSE)
+require(tidyverse)
+require(edgeR)
+require(readxl)
+require(readr)
+require(RColorBrewer)
+require(DT)
+source("HelperFunctions.R")
+
+
+# plot style
+theme_point<-theme_bw()+theme(strip.background = element_blank())
+theme_bar<-theme_bw()+theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1),strip.background = element_blank(),axis.ticks.x = element_blank(),axis.line.x = element_blank())
+theme_boxplot<-theme_bw()+theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1),strip.background = element_blank(),axis.ticks.x = element_blank(),axis.title.x = element_blank(),axis.line.x = element_blank(),legend.position = "none")
+
+color_panel<-c("#e35d6a","#5bb75b","#428bca","#e87810","#23496b","#ffbf00","#cc2028","#039748","pink","gray","darkgray")
+
+color_panel1 <-  c("#039748","#039748","#ffbf00","#ffbf00","#e35d6a","#e35d6a","#5bb75b","#5bb75b","#428bca","#428bca","#23496b","#23496b","#cc2028","#cc2028","#e87810")
+
+color_panel2 <-  brewer.pal(6, name = "Paired")
+names(color_panel2) <- c("Biomatrica", "EDTA","RNA Streck","Roche","DNA Streck", "PAXgene")
+
+makeRes <- function(fit, contrast){
+  lrt <- glmLRT(fit, contrast=contr)
+  dt1 <- datatable(as.data.frame(topTags(lrt)))
+  dt2 <- datatable(as.data.frame(summary(decideTests(lrt))))
+  plot <- plotMD(lrt)
+  return(list(dt1, dt2, plot))
+}
+
+# Global variables
+data_path <- "../data/"
+readcutoff <- 15
+
+sample_annotation<-read_excel("./cfRRBS_tubestudy_annotation.xlsx")
+```
+
+# Differential methylation
+## Setup
+Differential methylation of promotor regions was performed with EdgeR (https://www.bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf), and FRY/KEGG according to https://www.bioconductor.org/packages/devel/workflows/vignettes/RnaSeqGeneEdgeRQL/inst/doc/edgeRQL.html
+
+The cut-off was set at 15 reads per region. 
+
+```{r}
+if (file.exists("fitted_DMR_full.RData")){
+  load("fitted_DMR_full.RData")
+} else {
+  if (file.exists("bismark2DGE_object_full.Rdata")){
+  load("bismark2DGE_object_full.Rdata")
+  } else {
+  files<-list.files(data_path,recursive=TRUE)
+  files<-files[grep("18.cov$", files)]
+  yall <- readBismark2DGE(paste0(data_path,sample_annotation$cov_filename), sample.names=sample_annotation$UniqueID)
+  save(yall, file = "bismark2DGE_object_full.Rdata")
+  }
+
+yall <- yall[yall$genes$Chr %in% c(1:21, "X", "Y"), ]
+
+# Select sites in promotor regions
+TSS <- nearestTSS(yall$genes$Chr, yall$genes$Locus, species="Hs")
+yall$genes$EntrezID <- TSS$gene_id
+yall$genes$Symbol <- TSS$symbol
+yall$genes$Strand <- TSS$strand
+yall$genes$Distance <- TSS$distance
+yall$genes$Width <- TSS$width
+
+InPromoter <- yall$genes$Distance >= -1000 & yall$genes$Distance <= 2000
+yIP <- yall[InPromoter,,keep.lib.sizes=FALSE]
+
+yall <- rowsum(yIP, yIP$genes$EntrezID, reorder=FALSE)
+yall$genes$EntrezID <- NULL
+
+# Normalisation
+Methylation <- gl(2,1,ncol(yall), labels=c("Me","Un"))
+Me <- yall$counts[, Methylation=="Me"]
+Un <- yall$counts[, Methylation=="Un"]
+Coverage <- Me + Un 
+
+HasCoverage <- rowSums(Coverage >= 15) == 45
+HasBoth <- rowSums(Me) > 0 & rowSums(Un) > 0
+y <- yall[HasCoverage & HasBoth,, keep.lib.sizes=FALSE]
+
+# Correct for library size
+TotalLibSizepr <- 0.5*y$samples$lib.size[Methylation=="Me"] + 0.5*y$samples$lib.size[Methylation=="Un"]
+y$samples$lib.size <- rep(TotalLibSizepr, each=2)
+
+# design matrix
+designSL <- model.matrix(~0+TimeLapse:Tube, data=sample_annotation)
+design <- modelMatrixMeth(designSL)
+colnames(design) <- str_replace(colnames(design), ":", "_")
+colnames(design) <- str_replace(colnames(design), " ", "_")
+
+y <- estimateDisp(y, design=design, trend="none")
+fit <- glmFit(y, design)
+}
+```
+
+# Across tubes at T0 {.tabset}
+In the first differential methylation analysis, we compare each time every tube, at timepoint 0.
+
+## Biomatrica vs DNA Streck 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeBiomatrica  - TimeLapseT0_TubeDNA_Streck, levels=design)
+```
+
+
+```{r printStats}
+lrt <- glmLRT(fit, contrast=contr)
+datatable(as.data.frame(topTags(lrt)))
+datatable(as.data.frame(summary(decideTests(lrt)), col.names = c("direction", "condition", "freq")))
+plotMD(lrt)
+
+save_csv = data.frame(condition = rownames(contr), val = contr) %>% filter(contr != 0)
+save_csv$condition <- str_replace(save_csv$condition, "TimeLapse", "")
+save_csv$condition <- str_replace(save_csv$condition, "Tube", "")
+save_csv <- save_csv %>% separate(col = condition, into = c("TimeLapse", "Tube"), extra = "merge")
+
+char1 <- save_csv$TimeLapse[1]
+char2 <- save_csv$Tube[1]
+char3 <- save_csv$TimeLapse[2]
+char4 <- save_csv$Tube[2]
+
+write.csv(x = as.data.frame(topTags(lrt, n = 100)) %>% mutate(comparison = paste0(char1, "_", char2, "_", char3, "_", char4)), file = paste0("./tables/", char1, "_", char2, "_", char3, "_", char4, "_diffMeth.csv"), row.names=TRUE)
+```
+
+## Biomatrica vs EDTA 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeBiomatrica  - TimeLapseT0_TubeEDTA , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## Biomatrica vs PAXgene 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeBiomatrica  - TimeLapseT0_TubePaxgene , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## Biomatrica vs Roche
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeBiomatrica  - TimeLapseT0_TubeRoche , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## DNA Streck vs EDTA 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeDNA_Streck  - TimeLapseT0_TubeEDTA , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+
+## DNA Streck vs PAXgene 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeDNA_Streck  - TimeLapseT0_TubePaxgene , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## DNA Streck vs Roche 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeDNA_Streck  - TimeLapseT0_TubeRoche , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## EDTA vs PAXgene 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeEDTA  - TimeLapseT0_TubePaxgene , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## EDTA vs Roche 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeEDTA  - TimeLapseT0_TubeRoche , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## Roche vs PAXgene 
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT0_TubeRoche  - TimeLapseT0_TubePaxgene , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+# Within tubes {.tabset}
+In the second differential methylation analysis, we compare within tubes: the comparison is now between timepoint 0 and timepoint 72.
+
+## Biomatrica T72 vs T0
+
+```{r}
+contr <- makeContrasts(contr = TimeLapseT72_TubeBiomatrica - TimeLapseT0_TubeBiomatrica, levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## DNA Streck T72 vs T0
+```{r}
+# DNAStreck T0 vs T72
+contr <- makeContrasts(contr = TimeLapseT72_TubeDNA_Streck  - TimeLapseT0_TubeDNA_Streck , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## EDTA T72 vs T0
+```{r}
+# EDTA T0 vs T72
+contr <- makeContrasts(contr = TimeLapseT72_TubeEDTA  - TimeLapseT0_TubeEDTA , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+### Gene ontology
+#### FRY
+```{r}
+require(GO.db)
+require(org.Hs.eg.db)
+cyt.go <- c("GO:0006915", "GO:0071887", "GO:0030101")
+term <- select(GO.db, keys=cyt.go, columns="TERM")
+
+datatable(term)
+
+tmp <- org.Hs.egGO2ALLEGS
+Rkeys(tmp) <- cyt.go
+cyt.go.genes <- as.list(tmp)
+
+out <- fry(y, index=cyt.go.genes, design=design, contrast=contr)
+datatable(as.data.frame(out))
+
+
+res <- glmLRT(fit, contrast=contr)
+index <- rownames(fit) %in% cyt.go.genes[[1]]
+barcodeplot(res$table$logFC, index=index, labels=c("DOWN","UP"), main=cyt.go[1])
+```
+
+#### KEGG
+```{r}
+lrt <- glmLRT(fit, contrast=contr)
+keg <- kegga(lrt, species="Hs")
+datatable(as.data.frame(topKEGG(keg, n = 15, truncate=34)) %>% mutate(Up.FDR = p.adjust(P.Up, method = "fdr"), Down.FDR = p.adjust(P.Down, method = "fdr")))
+```
+
+## EDTA T24 vs T0
+```{r}
+contr <- makeContrasts(contr = TimeLapseT24_TubeEDTA  - TimeLapseT0_TubeEDTA , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## PAXgene T72 vs T0
+```{r}
+contr <- makeContrasts(contr = TimeLapseT72_TubePaxgene  - TimeLapseT0_TubePaxgene , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+## Roche T72 vs T0
+```{r}
+contr <- makeContrasts(contr = TimeLapseT72_TubeRoche  - TimeLapseT0_TubeRoche , levels=design)
+```
+
+```{r ref.label='printStats'}
+```
+
+# Session info
+```{r}
+sessionInfo()
+```

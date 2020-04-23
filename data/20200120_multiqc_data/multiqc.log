@@ -1,0 +1,478 @@
+[2020-01-25 08:20:22,960] multiqc                                            [DEBUG  ]  No MultiQC config found: /kyukon/home/gent/422/vsc42220/.local/lib/python3.6/site-packages/multiqc_config.yaml
+[2020-01-25 08:20:22,962] multiqc                                            [DEBUG  ]  No MultiQC config found: /user/gent/422/vsc42220/.multiqc_config.yaml
+[2020-01-25 08:20:22,962] multiqc                                            [DEBUG  ]  No MultiQC config found: multiqc_config.yaml
+[2020-01-25 08:20:22,962] multiqc                                            [DEBUG  ]  Command used: /user/home/gent/vsc422/vsc42220/.local/bin/multiqc .
+[2020-01-25 08:20:23,391] multiqc                                            [WARNING]  MultiQC Version v1.8 now available!
+[2020-01-25 08:20:23,391] multiqc                                            [INFO   ]  This is MultiQC v1.7
+[2020-01-25 08:20:23,391] multiqc                                            [DEBUG  ]  Command     : /user/home/gent/vsc422/vsc42220/.local/bin/multiqc .
+[2020-01-25 08:20:23,391] multiqc                                            [DEBUG  ]  Working dir : /kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE
+[2020-01-25 08:20:23,391] multiqc                                            [INFO   ]  Template    : default
+[2020-01-25 08:20:23,391] multiqc                                            [INFO   ]  Searching '.'
+[2020-01-25 08:20:23,392] multiqc                                            [DEBUG  ]  Analysing modules: custom_content, conpair, peddy, methylQA, phantompeakqualtools, qualimap, preseq, quast, qorts, rna_seqc, rsem, rseqc, busco, goleft_indexcov, disambiguate, supernova, deeptools, sargasso, verifybamid, mirtrace, happy, homer, macs2, theta2, snpeff, gatk, htseq, bcftools, featureCounts, dedup, damageprofiler, picard, prokka, samblaster, samtools, bamtools, jellyfish, vcftools, longranger, stacks, bbmap, bismark, biscuit, hicexplorer, hicup, hicpro, salmon, kallisto, slamdunk, star, hisat2, tophat, bowtie2, bowtie1, kat, leehom, adapterRemoval, clipandmerge, cutadapt, flexbar, trimmomatic, skewer, sortmerna, biobloomtools, fastq_screen, afterqc, fastp, fastqc, minionqc, clusterflow, bcl2fastq, interop, flash
+[2020-01-25 08:20:23,392] multiqc                                            [DEBUG  ]  Using temporary directory for creating report: /tmp/tmpc5wfskox
+[2020-01-25 08:20:23,548] multiqc                                            [DEBUG  ]  Ignoring directory as matched fn_ignore_dirs: ./dualindex/multiqc_data
+[2020-01-25 08:20:23,569] multiqc                                            [DEBUG  ]  Ignoring directory as matched fn_ignore_dirs: ./singleindex/multiqc_data
+[2020-01-25 08:20:24,019] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: multiqc_report.html
+[2020-01-25 08:20:25,603] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: 2020.01.23-18.24.34-report.html
+[2020-01-25 08:20:25,961] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.DNA032998_S30-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:20:25,963] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.DNA032997_S29-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:20:25,992] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032997_S29-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:20:25,993] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032998_S30-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:20:25,993] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032997_S29-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:20:25,994] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032998_S30-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:20:26,189] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032998_S30-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:20:26,190] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032997_S29-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:20:26,191] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032998_S30-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:20:26,192] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032997_S29-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:20:27,190] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032997_S29-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:20:27,337] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032997_S29-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:20:27,382] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032998_S30-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:20:27,383] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA032998_S30-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:20:31,422] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: multiqc_report.html
+[2020-01-25 08:20:50,321] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: 2020.01.25-05.13.30-report.html
+[2020-01-25 08:21:04,609] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.DNA027585_S11-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,611] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000080_S8-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,616] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000061_S16-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,618] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000086_S24-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,619] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000060_S2-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,619] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000058_S1-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,621] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000069_S5-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,624] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000087_S10-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,627] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000089_S25-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,628] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000068_S4-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,636] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000075_S20-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,644] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000097_S27-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,650] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000083_S22-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,655] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000072_S4-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,656] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000059_S1-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,656] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000064_S17-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,657] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000090_S12-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,658] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000066_S3-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,658] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000085_S10-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,661] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000099_S28-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,665] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000074_S6-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,667] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000057_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,667] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000094_S14-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,668] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.DNA027586_S12-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,668] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000063_S3-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,670] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000073_S5-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,675] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000065_S18-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,675] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000091_S13-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,678] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000078_S7-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,679] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000092_S13-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,682] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000088_S11-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,682] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000067_S19-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,684] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000077_S21-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,688] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000076_S7-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,690] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000095_S14-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,691] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000062_S2-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,692] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000096_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,696] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000098_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,699] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000093_S26-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,701] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000081_S9-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,701] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000082_S9-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,708] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000071_S6-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:04,710] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: lambda.cfDNA000079_S8-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,148] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000068_S4-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,148] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000064_S17-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,148] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000060_S2-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,148] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000087_S10-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,149] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027586_S12-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,149] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000094_S14-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,149] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000090_S12-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,149] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000086_S24-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,150] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000057_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,150] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000063_S3-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,150] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000066_S3-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,150] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000080_S8-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,151] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000059_S1-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,151] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027585_S11-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,151] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000075_S20-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,151] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000079_S8-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,152] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000071_S6-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,152] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000096_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,152] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000075_S20-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,152] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000065_S18-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,152] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000058_S1-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,153] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000071_S6-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,153] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000077_S21-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,153] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000073_S5-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,153] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000087_S10-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,154] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000076_S7-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,154] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000080_S8-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,154] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000083_S22-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,154] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000097_S27-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,154] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027585_S11-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,155] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000092_S13-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,155] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000058_S1-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,155] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000099_S28-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,155] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000081_S9-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,156] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000083_S22-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,156] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000066_S3-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,156] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000067_S19-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,157] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000097_S27-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,157] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000082_S9-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,157] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000090_S12-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,157] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027586_S12-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,158] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000088_S11-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,158] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000061_S16-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,158] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000089_S25-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,158] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000078_S7-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,158] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000062_S2-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,159] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000095_S14-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,159] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000062_S2-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,159] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000072_S4-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,159] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000093_S26-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,159] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000063_S3-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,160] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000091_S13-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,160] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000073_S5-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,160] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000085_S10-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,160] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000076_S7-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,161] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000065_S18-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,161] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000089_S25-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,161] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000060_S2-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,161] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000057_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,161] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000092_S13-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,162] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000081_S9-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,162] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000069_S5-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,162] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000091_S13-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,162] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000099_S28-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,162] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000096_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,163] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000095_S14-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,163] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000085_S10-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,163] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000098_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,164] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000074_S6-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,164] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000088_S11-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,164] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000098_S15-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,164] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000082_S9-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,164] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000061_S16-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,165] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000079_S8-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,165] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000077_S21-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,165] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000094_S14-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,165] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000059_S1-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,166] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000068_S4-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,166] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000067_S19-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,166] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000064_S17-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,166] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000072_S4-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,166] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000078_S7-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,167] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000086_S24-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,167] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000074_S6-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:05,167] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000093_S26-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam
+[2020-01-25 08:21:05,167] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000069_S5-subsamp18M-s18_R1_001_val_1_bismark_bt2_pe.bam.bai
+[2020-01-25 08:21:10,325] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000092_S13-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,325] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000081_S9-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,326] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000091_S13-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,326] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000094_S14-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,326] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000067_S19-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,326] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000073_S5-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,326] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000093_S26-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,326] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000063_S3-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,326] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000059_S1-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,326] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000098_S15-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000093_S26-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000095_S14-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000082_S9-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000072_S4-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000086_S24-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000088_S11-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000091_S13-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000087_S10-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,327] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000098_S15-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027586_S12-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000092_S13-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000065_S18-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000090_S12-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000088_S11-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000060_S2-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000061_S16-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000089_S25-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,328] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000059_S1-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000087_S10-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000057_S15-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000083_S22-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000076_S7-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000074_S6-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000075_S20-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000064_S17-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000099_S28-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,329] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000099_S28-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,330] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000060_S2-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,330] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000090_S12-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,330] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000066_S3-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,330] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000065_S18-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,330] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000085_S10-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,330] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000077_S21-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,330] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000081_S9-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,330] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000083_S22-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,331] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000080_S8-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,331] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000089_S25-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,331] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000079_S8-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,331] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000080_S8-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,331] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000068_S4-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,331] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000067_S19-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,331] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000066_S3-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,331] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000074_S6-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000077_S21-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000072_S4-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000075_S20-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000095_S14-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000063_S3-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027586_S12-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000061_S16-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000082_S9-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000078_S7-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,332] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000069_S5-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027585_S11-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000057_S15-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000079_S8-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000058_S1-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000096_S15-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000085_S10-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027585_S11-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000069_S5-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,333] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000058_S1-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,334] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000097_S27-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,334] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000094_S14-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,334] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000096_S15-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,334] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000071_S6-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,334] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000097_S27-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,334] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000078_S7-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,334] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000086_S24-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,334] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000073_S5-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,335] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000062_S2-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,335] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000064_S17-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,335] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000071_S6-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,335] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000068_S4-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:10,335] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000076_S7-subsamp18M-s18_R2_001.fastq.gz
+[2020-01-25 08:21:10,335] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000062_S2-subsamp18M-s18_R1_001.fastq.gz
+[2020-01-25 08:21:29,639] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000081_S9-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:29,734] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027585_S11-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:29,735] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000093_S26-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:29,844] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000091_S13-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:29,847] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000072_S4-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:29,848] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000062_S2-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:29,849] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000089_S25-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:29,952] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027586_S12-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:29,954] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000060_S2-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,079] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000082_S9-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,081] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000092_S13-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,082] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000078_S7-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,124] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000058_S1-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,243] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000099_S28-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,245] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000067_S19-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,284] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000087_S10-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,286] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000088_S11-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,288] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000080_S8-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,338] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000090_S12-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,340] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000096_S15-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,374] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000065_S18-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,376] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000077_S21-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,454] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000098_S15-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,503] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000094_S14-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,574] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000079_S8-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,575] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000093_S26-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,577] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027585_S11-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,615] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000061_S16-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,616] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000073_S5-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:30,736] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000094_S14-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:30,927] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000068_S4-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,009] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000076_S7-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,054] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000071_S6-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,222] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000081_S9-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,318] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000059_S1-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,365] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000069_S5-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,415] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000073_S5-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,455] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000083_S22-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,455] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000099_S28-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,457] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000082_S9-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,459] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000057_S15-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,461] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000075_S20-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,626] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000074_S6-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,700] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000087_S10-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,815] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000097_S27-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,817] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000089_S25-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,821] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000066_S3-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,864] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000095_S14-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,951] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000088_S11-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,990] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000058_S1-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,992] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000059_S1-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:31,994] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000098_S15-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:31,996] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000067_S19-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,033] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000091_S13-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,035] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000090_S12-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,068] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000079_S8-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,188] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000074_S6-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,413] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000085_S10-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,558] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000078_S7-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,560] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000072_S4-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,562] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000060_S2-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,650] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000063_S3-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,651] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000071_S6-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,653] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000086_S24-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,700] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000080_S8-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,700] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000096_S15-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,752] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000064_S17-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,800] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000085_S10-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,841] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000075_S20-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:32,878] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000097_S27-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,960] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000062_S2-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:32,961] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000061_S16-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:33,002] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000077_S21-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:33,081] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000057_S15-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:33,081] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000095_S14-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:33,083] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000092_S13-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:33,085] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000063_S3-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:33,087] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000064_S17-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:33,089] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000065_S18-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:33,090] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000068_S4-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:33,092] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000086_S24-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:33,092] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000076_S7-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:33,130] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000069_S5-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:33,176] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000083_S22-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:33,249] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: DNA027586_S12-subsamp18M-s18_R2_001_val_2_fastqc.html
+[2020-01-25 08:21:33,251] multiqc                                            [DEBUG  ]  Ignoring file as matched an ignore pattern: cfDNA000066_S3-subsamp18M-s18_R1_001_val_1_fastqc.html
+[2020-01-25 08:21:35,396] multiqc                                            [DEBUG  ]  No samples found: custom_content
+[2020-01-25 08:21:35,407] multiqc                                            [DEBUG  ]  No samples found: conpair
+[2020-01-25 08:21:35,432] multiqc                                            [DEBUG  ]  No samples found: peddy
+[2020-01-25 08:21:35,459] multiqc                                            [DEBUG  ]  No samples found: methylQA
+[2020-01-25 08:21:35,468] multiqc                                            [DEBUG  ]  No samples found: phantompeakqualtools
+[2020-01-25 08:21:35,490] multiqc                                            [DEBUG  ]  No samples found: qualimap
+[2020-01-25 08:21:35,513] multiqc                                            [DEBUG  ]  No samples found: preseq
+[2020-01-25 08:21:35,540] multiqc                                            [DEBUG  ]  No samples found: quast
+[2020-01-25 08:21:35,556] multiqc                                            [DEBUG  ]  No samples found: qorts
+[2020-01-25 08:21:35,587] multiqc                                            [DEBUG  ]  No samples found: rna_seqc
+[2020-01-25 08:21:35,618] multiqc                                            [DEBUG  ]  No samples found: rsem
+[2020-01-25 08:21:35,660] multiqc                                            [DEBUG  ]  No samples found: rseqc
+[2020-01-25 08:21:35,668] multiqc                                            [DEBUG  ]  No samples found: busco
+[2020-01-25 08:21:35,695] multiqc                                            [DEBUG  ]  No samples found: goleft_indexcov
+[2020-01-25 08:21:35,708] multiqc                                            [DEBUG  ]  No samples found: disambiguate
+[2020-01-25 08:21:35,736] multiqc                                            [DEBUG  ]  No samples found: supernova
+[2020-01-25 08:21:35,801] multiqc                                            [DEBUG  ]  No samples found: deeptools
+[2020-01-25 08:21:35,821] multiqc                                            [DEBUG  ]  No samples found: sargasso
+[2020-01-25 08:21:35,841] multiqc                                            [DEBUG  ]  No samples found: verifybamid
+[2020-01-25 08:21:35,871] multiqc                                            [DEBUG  ]  No samples found: mirtrace
+[2020-01-25 08:21:35,897] multiqc                                            [DEBUG  ]  No samples found: happy
+[2020-01-25 08:21:35,933] multiqc                                            [DEBUG  ]  No samples found: homer
+[2020-01-25 08:21:35,960] multiqc                                            [DEBUG  ]  No samples found: macs2
+[2020-01-25 08:21:35,970] multiqc                                            [DEBUG  ]  No samples found: theta2
+[2020-01-25 08:21:35,998] multiqc                                            [DEBUG  ]  No samples found: snpeff
+[2020-01-25 08:21:36,036] multiqc                                            [DEBUG  ]  No samples found: gatk
+[2020-01-25 08:21:36,047] multiqc                                            [DEBUG  ]  No samples found: htseq
+[2020-01-25 08:21:36,076] multiqc                                            [DEBUG  ]  No samples found: bcftools
+[2020-01-25 08:21:36,086] multiqc                                            [DEBUG  ]  No samples found: featureCounts
+[2020-01-25 08:21:36,093] multiqc                                            [DEBUG  ]  No samples found: dedup
+[2020-01-25 08:21:36,123] multiqc                                            [DEBUG  ]  No samples found: damageprofiler
+[2020-01-25 08:21:36,719] multiqc.modules.picard.picard                      [INFO   ]  Found 45 HsMetrics reports
+[2020-01-25 08:21:36,831] multiqc.modules.picard.picard                      [INFO   ]  Found 90 MarkDuplicates reports
+[2020-01-25 08:21:36,853] multiqc                                            [DEBUG  ]  No samples found: prokka
+[2020-01-25 08:21:36,863] multiqc                                            [DEBUG  ]  No samples found: samblaster
+[2020-01-25 08:21:36,912] multiqc                                            [DEBUG  ]  No samples found: samtools
+[2020-01-25 08:21:36,924] multiqc                                            [DEBUG  ]  No samples found: bamtools
+[2020-01-25 08:21:36,939] multiqc                                            [DEBUG  ]  No samples found: jellyfish
+[2020-01-25 08:21:36,955] multiqc                                            [DEBUG  ]  No samples found: vcftools
+[2020-01-25 08:21:36,982] multiqc                                            [DEBUG  ]  No samples found: longranger
+[2020-01-25 08:21:37,003] multiqc                                            [DEBUG  ]  No samples found: stacks
+[2020-01-25 08:21:37,057] multiqc                                            [DEBUG  ]  No samples found: bbmap
+[2020-01-25 08:21:37,188] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: DNA032998_S30-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,189] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: DNA032997_S29-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,192] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000098_S15-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,194] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000072_S4-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,196] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000083_S22-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,211] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000064_S17-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,215] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000068_S4-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,220] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000093_S26-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,222] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000095_S14-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,223] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000091_S13-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,226] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000094_S14-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,226] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000071_S6-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,228] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000081_S9-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,229] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000079_S8-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,230] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000089_S25-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,230] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000090_S12-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,231] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000061_S16-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,232] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000078_S7-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,233] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000082_S9-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,234] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000075_S20-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,235] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000073_S5-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,235] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000066_S3-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,236] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000063_S3-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,236] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000065_S18-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,238] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000077_S21-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,241] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000074_S6-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,243] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000092_S13-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,245] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000096_S15-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,246] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000062_S2-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,247] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000060_S2-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,248] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000059_S1-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,250] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: DNA027586_S12-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,251] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000057_S15-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,253] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000085_S10-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,253] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000080_S8-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,254] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000058_S1-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,255] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000087_S10-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,255] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: DNA027585_S11-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,256] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000086_S24-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,256] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000097_S27-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,257] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000067_S19-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,258] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000088_S11-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,260] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000069_S5-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,260] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000076_S7-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:37,261] multiqc.modules.bismark.bismark                    [DEBUG  ]  Duplicate methylation extraction sample log found! Overwriting: cfDNA000099_S28-subsamp18M-s18_R1_001_val_1
+[2020-01-25 08:21:39,537] multiqc.modules.bismark.bismark                    [INFO   ]  Found 90 bismark alignment reports
+[2020-01-25 08:21:39,538] multiqc.modules.bismark.bismark                    [INFO   ]  Found 45 bismark dedup reports
+[2020-01-25 08:21:39,541] multiqc.modules.bismark.bismark                    [INFO   ]  Found 90 bismark methextract reports
+[2020-01-25 08:21:39,600] multiqc.modules.bismark.bismark                    [INFO   ]  Found 90 bismark bam2nuc reports
+[2020-01-25 08:21:39,626] multiqc                                            [DEBUG  ]  No samples found: biscuit
+[2020-01-25 08:21:39,650] multiqc                                            [DEBUG  ]  No samples found: hicexplorer
+[2020-01-25 08:21:39,672] multiqc                                            [DEBUG  ]  No samples found: hicup
+[2020-01-25 08:21:39,700] multiqc                                            [DEBUG  ]  No samples found: hicpro
+[2020-01-25 08:21:39,708] multiqc                                            [DEBUG  ]  No samples found: salmon
+[2020-01-25 08:21:39,736] multiqc                                            [DEBUG  ]  No samples found: kallisto
+[2020-01-25 08:21:39,759] multiqc                                            [DEBUG  ]  No samples found: slamdunk
+[2020-01-25 08:21:39,772] multiqc                                            [DEBUG  ]  No samples found: star
+[2020-01-25 08:21:39,780] multiqc                                            [DEBUG  ]  No samples found: hisat2
+[2020-01-25 08:21:39,809] multiqc                                            [DEBUG  ]  No samples found: tophat
+[2020-01-25 08:21:39,833] multiqc                                            [DEBUG  ]  No samples found: bowtie2
+[2020-01-25 08:21:39,865] multiqc                                            [DEBUG  ]  No samples found: bowtie1
+[2020-01-25 08:21:39,873] multiqc                                            [DEBUG  ]  No samples found: kat
+[2020-01-25 08:21:39,881] multiqc                                            [DEBUG  ]  No samples found: leehom
+[2020-01-25 08:21:39,908] multiqc                                            [DEBUG  ]  No samples found: adapterRemoval
+[2020-01-25 08:21:39,917] multiqc                                            [DEBUG  ]  No samples found: clipandmerge
+[2020-01-25 08:21:39,949] multiqc.modules.cutadapt.cutadapt                  [DEBUG  ]  Duplicate sample name found! Overwriting: DNA032998_S30-subsamp18M-s18_R1_001
+[2020-01-25 08:21:39,951] multiqc.modules.cutadapt.cutadapt                  [DEBUG  ]  Duplicate sample name found! Overwriting: DNA032998_S30-subsamp18M-s18_R2_001
+[2020-01-25 08:21:39,955] multiqc.modules.cutadapt.cutadapt                  [DEBUG  ]  Duplicate sample name found! Overwriting: DNA032997_S29-subsamp18M-s18_R1_001
+[2020-01-25 08:21:39,957] multiqc.modules.cutadapt.cutadapt                  [DEBUG  ]  Duplicate sample name found! Overwriting: DNA032997_S29-subsamp18M-s18_R2_001
+[2020-01-25 08:21:39,960] multiqc.modules.cutadapt.cutadapt                  [DEBUG  ]  Duplicate sample name found! Overwriting: DNA032998_S30-subsamp18M-s18_R2_001
+[2020-01-25 08:21:39,962] multiqc.modules.cutadapt.cutadapt                  [DEBUG  ]  Duplicate sample name found! Overwriting: DNA032997_S29-subsamp18M-s18_R2_001
+[2020-01-25 08:21:39,963] multiqc.modules.cutadapt.cutadapt                  [DEBUG  ]  Duplicate sample name found! Overwriting: DNA032997_S29-subsamp18M-s18_R1_001
+[2020-01-25 08:21:39,965] multiqc.modules.cutadapt.cutadapt                  [DEBUG  ]  Duplicate sample name found! Overwriting: DNA032998_S30-subsamp18M-s18_R1_001
+[2020-01-25 08:21:40,149] multiqc.modules.cutadapt.cutadapt                  [INFO   ]  Found 90 reports
+[2020-01-25 08:21:40,174] multiqc                                            [DEBUG  ]  No samples found: flexbar
+[2020-01-25 08:21:40,195] multiqc                                            [DEBUG  ]  No samples found: trimmomatic
+[2020-01-25 08:21:40,221] multiqc                                            [DEBUG  ]  No samples found: skewer
+[2020-01-25 08:21:40,228] multiqc                                            [DEBUG  ]  No samples found: sortmerna
+[2020-01-25 08:21:40,237] multiqc                                            [DEBUG  ]  No samples found: biobloomtools
+[2020-01-25 08:21:40,262] multiqc                                            [DEBUG  ]  No samples found: fastq_screen
+[2020-01-25 08:21:40,281] multiqc                                            [DEBUG  ]  No samples found: afterqc
+[2020-01-25 08:21:40,309] multiqc                                            [DEBUG  ]  No samples found: fastp
+[2020-01-25 08:21:47,716] multiqc.modules.fastqc.fastqc                      [INFO   ]  Found 90 reports
+[2020-01-25 08:21:48,564] multiqc                                            [DEBUG  ]  No samples found: minionqc
+[2020-01-25 08:21:48,597] multiqc                                            [DEBUG  ]  No samples found: clusterflow
+[2020-01-25 08:21:48,624] multiqc                                            [DEBUG  ]  No samples found: bcl2fastq
+[2020-01-25 08:21:48,647] multiqc                                            [DEBUG  ]  No samples found: interop
+[2020-01-25 08:21:48,674] multiqc                                            [DEBUG  ]  No samples found: flash
+[2020-01-25 08:21:49,170] multiqc                                            [INFO   ]  Compressing plot data
+[2020-01-25 08:21:51,621] multiqc                                            [INFO   ]  Report      : multiqc_report.html
+[2020-01-25 08:21:51,622] multiqc                                            [INFO   ]  Data        : multiqc_data
+[2020-01-25 08:21:51,641] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_picard_HsMetrics.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,667] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_picard_dups.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,668] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_data.json' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,684] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_bismark_alignment.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,685] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_bismark_dedup.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,686] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_bismark_methextract.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,687] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_bismark_bam2nuc.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,688] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_cutadapt.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,688] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_fastqc.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,689] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_general_stats.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:51,690] multiqc                                            [DEBUG  ]  Moving data file from '/tmp/tmpc5wfskox/multiqc_data/multiqc_sources.txt' to '/kyukon/data/gent/vo/000/gvo00027/vsc42220/RVP1808_TubeStudy/subsampled_reads_PE/multiqc_data'
+[2020-01-25 08:21:52,190] multiqc                                            [INFO   ]  MultiQC complete

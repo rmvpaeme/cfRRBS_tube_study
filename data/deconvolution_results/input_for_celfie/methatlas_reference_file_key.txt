@@ -1,0 +1,1 @@
+Monocytes_EPIC	B-cells_EPIC	CD4T-cells_EPIC	NK-cells_EPIC	CD8T-cells_EPIC	Neutrophils_EPIC	Erythrocyte_progenitors	Adipocytes	Cortical_neurons	Hepatocytes	Lung_cells	Pancreatic_beta_cells	Pancreatic_acinar_cells	Pancreatic_duct_cells	Vascular_endothelial_cells	Colon_epithelial_cells	Left_atrium	Bladder	Breast	Head_and_neck_larynx	Kidney	Prostate	Thyroid	Upper_GI	Uterus_cervix
